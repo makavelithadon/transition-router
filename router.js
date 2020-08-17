@@ -1,4 +1,5 @@
 import * as utils from "./utils";
+import { v4 as uuidv4 } from "uuid";
 
 function getDefaultHooks() {
   return {
@@ -29,8 +30,7 @@ export default class Router {
     this.next = null;
     this.previous = null;
     this.hooks = hooks;
-    this.currentAnimation = null;
-    this.pipe = [];
+    this.animationId = null;
     this._init();
   }
 
@@ -70,7 +70,7 @@ export default class Router {
   }
 
   getState() {
-    return ["previous", "current", "next", "_root"].reduce(
+    return ["previous", "current", "next", "_root", "queue"].reduce(
       (acc, props) => ({ ...acc, [props]: this[props] }),
       {}
     );
@@ -87,36 +87,13 @@ export default class Router {
     this._handleLinks(this._root);
   }
 
-  async _onChange(firstLoad) {
-    const pageUrl = this._getPageFromURL();
+  async once(transition, state) {
+    this.hooks.once(state);
+    await transition.once(state);
+    this.hooks.afterOnce(state);
+  }
 
-    this.setState({ next: pageUrl });
-
-    const transition = this.getMatchingTransition(firstLoad);
-    const nextRoute = this._routes.find((route) => route.path === pageUrl);
-    console.log({ transition });
-    if (firstLoad) {
-      this.changeRoute(nextRoute);
-      this.setState({ next: null });
-      const state = this.getState();
-      this._isAnimated = true;
-      this.hooks.enter(state);
-      if (transition) {
-        if (transition.once) {
-          await transition.once(state);
-          this.hooks.afterOnce(state);
-        }
-        transition.enter && (await transition.enter(state));
-      }
-      this._isAnimated = false;
-      this.hooks.afterEnter(state);
-      return;
-    }
-
-    // Start normal workflow (leave then enter transitions) if any
-
-    // Leave transition
-    let state = this.getState();
+  async leave(transition, state) {
     this.hooks.leave(state);
     this._isAnimated = true;
     if (transition) {
@@ -125,9 +102,10 @@ export default class Router {
     this._isAnimated = false;
     this.removeFromDom(this._root.firstElementChild);
     this.hooks.afterLeave(state);
-    this.setState({ previous: this.current, current: pageUrl, next: null });
-    state = this.getState();
-    this.changeRoute(nextRoute);
+  }
+
+  async enter(route, transition, state) {
+    this.changeRoute(route);
     this.hooks.enter(state);
     this._isAnimated = true;
     if (transition) {
@@ -135,6 +113,50 @@ export default class Router {
       this.hooks.afterEnter(state);
     }
     this._isAnimated = false;
+  }
+
+  async _onChange(firstLoad) {
+    const id = uuidv4();
+    this.animationId = id;
+    const pageUrl = this._getPageFromURL();
+
+    this.setState({ next: pageUrl });
+
+    const transition = this.getMatchingTransition(firstLoad);
+    const nextRoute = this._routes.find((route) => route.path === pageUrl);
+    if (firstLoad) {
+      this.changeRoute(nextRoute);
+      this.setState({ next: null });
+      const state = this.getState();
+      this._isAnimated = true;
+      if (transition) {
+        if (transition.once) {
+          if (!utils.areEqual(this.animationId, id)) return;
+          await this.once(transition, state);
+        }
+        this.hooks.enter(state);
+        if (!utils.areEqual(this.animationId, id)) return;
+        transition.enter && (await transition.enter(state));
+      }
+      this._isAnimated = false;
+      this.hooks.afterEnter(state);
+      return;
+    }
+
+    // Leave workflow
+    let state = this.getState();
+
+    if (!utils.areEqual(this.animationId, id)) return;
+
+    // Leave workflow
+    await this.leave(transition, state);
+    this.setState({ previous: this.current, current: pageUrl, next: null });
+    state = this.getState();
+
+    if (!utils.areEqual(this.animationId, id)) return;
+
+    // Enter workflow
+    await this.enter(nextRoute, transition, state);
   }
 
   getMatchingTransition(firstLoad) {

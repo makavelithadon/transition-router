@@ -3,19 +3,21 @@ import Router from "./router";
 
 const promisify = (fn) => new Promise((r) => fn(r));
 
-const animationDuration = 0.75;
+const animationDuration = 1;
+const ease = "power2.out";
 
 function zoomOutAnimation() {
   return promisify((r) => {
     const tl = gsap.timeline();
     tl.fromTo(
       ".anim",
-      { scale: 1 },
+      { scale: 1, opacity: 1 },
       {
         scale: 0,
+        opacity: 0,
         onComplete: r,
         duration: animationDuration,
-        ease: "power4.out",
+        ease,
       }
     );
   });
@@ -26,12 +28,13 @@ function zoomInAnimation() {
     const tl = gsap.timeline();
     tl.fromTo(
       ".anim",
-      { scale: 0 },
+      { scale: 0, opacity: 0 },
       {
         scale: 1,
+        opacity: 1,
         onComplete: r,
         duration: animationDuration,
-        ease: "power4.out",
+        ease,
       }
     );
   });
@@ -50,9 +53,9 @@ function specialAnimation() {
         y: 0,
         opacity: 1,
         stagger: 0.15,
-        ease: "power4.out",
         onComplete: r,
         duration: animationDuration,
+        ease,
       }
     );
   });
@@ -63,7 +66,7 @@ function panelAnimation() {
     gsap.fromTo(
       ".panel-top",
       { y: 0 },
-      { y: "-100%", delay: 1, ease: "power2.out", duration: 0.75 }
+      { y: "-100%", delay: 1, ease, duration: 0.75 }
     );
     gsap.fromTo(
       ".panel-bottom",
@@ -72,7 +75,7 @@ function panelAnimation() {
         y: "100%",
         onComplete: res,
         delay: 1,
-        ease: "power2.out",
+        ease,
         duration: 0.75,
       }
     );
@@ -93,7 +96,7 @@ function enterAnimation() {
         y: 0,
         opacity: 1,
         stagger: 0.15,
-        ease: "power4.out",
+        ease,
         onComplete: resolve,
         duration: animationDuration,
       }
@@ -108,7 +111,7 @@ function leaveAnimation() {
       x: 40,
       opacity: 0,
       stagger: 0.15,
-      ease: "power4.out",
+      ease,
       onComplete: res,
       duration: animationDuration,
     });
