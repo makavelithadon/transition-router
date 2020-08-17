@@ -1,10 +1,10 @@
 export default {
-  path: "/",
-  title: "Romuald Duconseil -- Front-End Developper -- Home",
+  path: "/works",
+  title: "Romuald Duconseil -- Front-End Developper -- Works",
   content: `
   <div>
     <h1 class="page-title anim">
-      Home
+      Works
     </h1>
     <p class="anim">
       Consequat consequat cillum Lorem mollit officia commodo. Id magna in
@@ -29,7 +29,7 @@ export default {
       nulla officia adipisicing eu proident. Fugiat non nulla minim cillum
       magna cillum proident exercitation incididunt cillum irure Lorem.
     </p>
-    <a class="button anim" href="/about">About me</a>
+    <a class="button anim" href="/">Back to Home</a>
   </div>
 `,
 };

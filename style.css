@@ -50,7 +50,7 @@ a {
 }
 
 a.is-active {
-  color: #0f4c75;
+  color: #cc1acc;
   font-weight: 700;
 }
 
@@ -68,7 +68,7 @@ h6 {
   font-size: 42px;
   color: #1b262c;
   line-height: 1;
-  margin-bottom: 1.5em;
+  margin-bottom: 1em;
 }
 
 p {
@@ -86,9 +86,29 @@ p {
   color: #333;
   cursor: pointer;
   font-weight: 900;
-  transition: box-shadow .25s ease-out;
+  transition: box-shadow 0.25s ease-out;
 }
 
 .button:hover {
-  box-shadow: 0 1px 2px 2px rgba(0, 0, 0, .3);
+  box-shadow: 0 1px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50vh;
+  background: #3084a0;
+  z-index: 1;
+}
+
+.panel-top {
+  top: 0;
+  transform: translateY(-100%);
+}
+
+.panel-bottom {
+  bottom: 0;
+  transform: translateY(100%);
 }
