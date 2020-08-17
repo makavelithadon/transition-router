@@ -1,24 +1,17 @@
 //import routes from "./pages/index.js";
+import * as utils from './utils'
 
-const isFn = (n) => n && typeof n === "function";
+let tl;
 
-function delay(n = 1000) {
-  return new Promise((r) => setTimeout(r, n));
-}
-
-function animateOnce() {
+function animate() {
   return new Promise((resolve) => {
-    const tl = gsap.timeline();
+    tl = gsap.timeline();
     tl.from(".anim", {
       y: 20,
       opacity: 0,
       stagger: 0.25,
-      ease: "power3.out",
+      ease: "power4.out",
       onComplete: resolve,
-    });
-    const reverseButton = document.querySelector(".reverse");
-    reverseButton.addEventListener("click", () => {
-      tl.reverse();
     });
   });
 }
@@ -36,7 +29,21 @@ class Router {
     this._history = window.History;
     this._isAnimated = false;
     this._preventRunning = preventRunning;
+    this.current = this._getPageFromURL();
+    this.next = null;
+    this.previous = null;
     this._init();
+  }
+
+  update (options) {
+    for (const [props, value] of Object.entries(options)) {
+      this[props] = value;
+    }
+  }
+
+  _getPageFromURL () {
+    const url = this._history.getState().cleanUrl;
+    return url.slice(url.lastIndexOf('/'));
   }
 
   _init() {
@@ -44,75 +51,94 @@ class Router {
     // Bind to StateChange Event
     this._history.Adapter.bind(window, "statechange", () => {
       // Note: We are using statechange instead of popstate
-      console.log("state on URL change", this._history.getState());
+      console.log("URL change", this._history.getState());
+      this.update({ next: this._getPageFromURL() })
+      this._onChange();
     });
 
     this._handleLinks();
-    this._onChange({
-      previous: null,
-      next: /* `/${this._history.getState().title}` */ "/about",
-      firstLoad: true,
-    });
+    this.update({ next: this._getPageFromURL() })
+    this._onChange(true);
   }
 
-  async _onChange({ previous, next, firstLoad }) {
-    console.log(
-      this._routes.filter((route) => route.path === next),
-      next
-    );
-    if (firstLoad) {
-      this._root.insertAdjacentHTML(
-        "afterbegin",
-        this._routes.filter((route) => route.path === next)[0].content
-      );
+  debug () {
+    console.log(['current', 'next', 'previous'].reduce((acc, props) => ({ ...acc, [props]: this[props] }), {}));
+  }
 
-      if (isFn(this._transitions[0].once)) {
+  appendToDom (newDom) {
+    this._root.insertAdjacentHTML(
+        "afterbegin",
+        newDom
+      );
+  }
+
+  removeFromDom (domToRemove) {
+    this._root.removeChild(domToRemove);
+  }
+
+  async _onChange(firstLoad) {
+    this.debug()
+    if (firstLoad) {
+      this.appendToDom(this._routes.filter((route) => route.path === this.next)[0].content)
+
+      if (utils.isFn(this._transitions[0].once)) {
         this._isAnimated = true;
         await this._transitions[0].once(this._root);
         this._isAnimated = false;
       }
+      this._handleLinks(this._root);
       return;
     }
     if (!this._transitions.length) return;
     for (const transition of this._transitions) {
-      if (isFn(transition.leave)) {
+      if (utils.isFn(transition.leave)) {
         this._isAnimated = true;
-        await transition.leave(this._root);
+        await transition.leave({previous: this.previous, current: this.current, next: this.next});
         this._isAnimated = false;
       }
-      if (isFn(transition.enter)) {
+      this.removeFromDom(this._root.firstElementChild);
+      this.appendToDom(this._routes.filter((route) => route.path === this.next)[0].content)
+      this._handleLinks(this._root);
+      if (utils.isFn(transition.enter)) {
         this._isAnimated = true;
-        await transition.enter(this._root);
+        await transition.enter(({previous: this.previous, current: this.current, next: this.next}));
         this._isAnimated = false;
       }
     }
   }
 
-  _handleLinks() {
-    const links = this.routes
-      .map((route) => document.querySelector(`a[href="${route.path}"]`))
+  _handleLinks(container = document) {
+    const links = container.querySelectorAll('a[href]');
+    if (!links.length) {
+      console.log('No links to parse.');
+      return;
+    }
+    const matchedLinks = this.routes
+      .map((route) => container.querySelector(`a[href="${route.path}"]`))
       .filter(Boolean);
 
-    if (!links.length)
+    if (!matchedLinks.length)
       throw new Error("No links match with provided routes paths");
 
-    for (const link of links) {
+    for (const link of matchedLinks) {
       link.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         const url = link.getAttribute("href");
         const pathname = document.location.pathname;
         if (pathname === url) return;
+        if (this._preventRunning && this._isAnimated) return;
+        this.update({next: url});
         this._history.pushState(
-          { state: this._urlToIdentifier(url) },
-          link.getAttribute("data-history") || this._urlToIdentifier(url),
+          { state: this._linkUrlToIdentifier(url) },
+          link.getAttribute("data-history") || this._linkUrlToIdentifier(url),
           url
         );
       });
     }
   }
 
-  _urlToIdentifier(url) {
+  _linkUrlToIdentifier(url) {
     return url.indexOf("/") === 0 ? url.slice(1) : url;
   }
 
@@ -126,10 +152,10 @@ const home = {
   title: "Romuald Duconseil -- Front-End Developper -- Home",
   content: `
   <div>
-    <h1 class="page-title" class>
+    <h1 class="page-title anim">
       Home
     </h1>
-    <p>
+    <p class="anim">
       Consequat consequat cillum Lorem mollit officia commodo. Id magna in
       veniam sint magna non. Dolore culpa do elit nulla aute mollit
       proident sunt ullamco. Sint cillum id dolore commodo amet mollit
@@ -152,6 +178,7 @@ const home = {
       nulla officia adipisicing eu proident. Fugiat non nulla minim cillum
       magna cillum proident exercitation incididunt cillum irure Lorem.
     </p>
+    <a class="button anim" href="/about">About me</a>
   </div>
 `,
 };
@@ -160,6 +187,7 @@ const about = {
   path: "/about",
   title: "Romuald Duconseil -- Front-End Developper -- About",
   content: `
+  <div>
     <h1 class="page-title anim">
       About
     </h1>
@@ -173,21 +201,38 @@ const about = {
       anim dolore nulla deserunt sunt officia duis aliquip. Enim do enim
       ea quis minim nisi sit ipsum tempor incididunt et anim ullamco.
     </p>
-    <button class="reverse anim">Reverse animation</button>
+    <a class="button anim" href="/">Back to Home</a>
+  </div>
 `,
 };
 
 const router = new Router({
+  preventRunning: true,
   root: ".container",
   routes: [home, about],
   transitions: [
     {
       once() {
-        return animateOnce();
+        return animate();
       },
+      leave (data) {
+        console.log('Leave with those entries', data);
+        return new Promise(res => {
+          const tl = gsap.timeline();
+          tl.to('.anim', {
+            x: 40,
+            opacity: 0,
+            stagger: 0.25,
+            ease: "power4.out",
+            onComplete: res,
+          })
+        });
+      },
+      enter (data) {
+        console.log('Enter with those entries', data);
+        return animate();
+      }
     },
   ],
   preventRunning: true,
 });
-
-console.log({ router });
