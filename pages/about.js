@@ -27,6 +27,7 @@ export default {
       Id ex non nostrud sunt in eiusmod fugiat consectetur anim mollit. Culpa ea ullamco do irure eiusmod velit commodo consectetur et in. Aliquip irure Lorem mollit voluptate exercitation nostrud laborum ipsum. Sint aliquip irure minim excepteur amet ullamco est. Proident ex fugiat excepteur cillum nostrud excepteur consectetur elit aliquip laboris excepteur laboris minim. Anim incididunt officia commodo deserunt.
     </p>
     <a class="button anim" href="/">Back to Home</a>
+    <a class="button anim" href="/works">Go to Works</a>
   </div>
 `,
 };

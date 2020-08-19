@@ -1,5 +1,6 @@
-import * as utils from "./utils";
+import history from "history/browser";
 import { v4 as uuidv4 } from "uuid";
+import { areEqual, isFn } from "./utils";
 
 function getDefaultHooks() {
   return {
@@ -23,7 +24,7 @@ export default class Router {
     this._root = document.querySelector(root);
     this._routes = routes;
     this._transitions = transitions;
-    this._history = window.History;
+    this._history = history;
     this._isAnimated = false;
     this._preventRunning = preventRunning;
     this.current = this._getPageFromURL();
@@ -38,19 +39,16 @@ export default class Router {
     for (const [props, value] of Object.entries(options)) {
       this[props] = value;
     }
+    return this.getState();
   }
 
   _getPageFromURL() {
-    const url = this._history.getState().cleanUrl;
+    const url = this._history.location.pathname;
     return url.slice(url.lastIndexOf("/"));
   }
 
   _init() {
-    // Bind to StateChange Event
-    this._history.Adapter.bind(window, "statechange", () => {
-      this._onChange();
-    });
-
+    this._history.listen(() => this._onChange());
     this._handleLinks();
     this.setState({ next: this.current });
     this._onChange(true);
@@ -70,13 +68,13 @@ export default class Router {
   }
 
   getState() {
-    return ["previous", "current", "next", "_root", "queue"].reduce(
+    return ["previous", "current", "next", "_root", "animationId"].reduce(
       (acc, props) => ({ ...acc, [props]: this[props] }),
       {}
     );
   }
 
-  changeRoute({ content, title, scripts }, nextState = {}) {
+  changeRoute({ content, title, scripts }) {
     this.appendToDom(content);
     if (title) document.title = title;
     if (scripts && !!scripts.length) {
@@ -87,24 +85,25 @@ export default class Router {
     this._handleLinks(this._root);
   }
 
-  async once(transition, state) {
-    this.hooks.once(state);
-    await transition.once(state);
-    this.hooks.afterOnce(state);
-  }
+  async leave(transition, state, id) {
+    if (!areEqual(this.animationId, id)) return;
+    if (this._root.innerHTML.length === 0) return;
 
-  async leave(transition, state) {
     this.hooks.leave(state);
     this._isAnimated = true;
+    this.removeClickOnRouterLinks();
     if (transition) {
       transition.leave && (await transition.leave(state));
     }
     this._isAnimated = false;
+
+    if (!areEqual(this.animationId, id)) return;
     this.removeFromDom(this._root.firstElementChild);
     this.hooks.afterLeave(state);
   }
 
-  async enter(route, transition, state) {
+  async enter(route, transition, state, id) {
+    if (!areEqual(this.animationId, id)) return;
     this.changeRoute(route);
     this.hooks.enter(state);
     this._isAnimated = true;
@@ -115,48 +114,45 @@ export default class Router {
     this._isAnimated = false;
   }
 
+  async once(route, transition, state, id) {
+    if (!areEqual(this.animationId, id)) return;
+    this._isAnimated = true;
+    this.hooks.once(state);
+    if (transition) {
+      transition.once && (await transition.once(transition, state));
+    }
+    this.hooks.afterOnce(state);
+    if (!areEqual(this.animationId, id)) return;
+    this.changeRoute(route);
+    if (transition) {
+      this.hooks.enter(state);
+      transition.enter && (await transition.enter(state));
+      this.hooks.afterEnter(state);
+    }
+    this._isAnimated = false;
+  }
+
   async _onChange(firstLoad) {
-    const id = uuidv4();
-    this.animationId = id;
+    const id = (this.animationId = uuidv4());
     const pageUrl = this._getPageFromURL();
 
-    this.setState({ next: pageUrl });
+    let state = this.setState({ next: pageUrl });
 
     const transition = this.getMatchingTransition(firstLoad);
     const nextRoute = this._routes.find((route) => route.path === pageUrl);
-    if (firstLoad) {
-      this.changeRoute(nextRoute);
-      this.setState({ next: null });
-      const state = this.getState();
-      this._isAnimated = true;
-      if (transition) {
-        if (transition.once) {
-          if (!utils.areEqual(this.animationId, id)) return;
-          await this.once(transition, state);
-        }
-        this.hooks.enter(state);
-        if (!utils.areEqual(this.animationId, id)) return;
-        transition.enter && (await transition.enter(state));
-      }
-      this._isAnimated = false;
-      this.hooks.afterEnter(state);
-      return;
+
+    if (!firstLoad) {
+      // Leave workflow
+      await this.leave(transition, state, id);
     }
 
-    // Leave workflow
-    let state = this.getState();
+    state = this.setState({
+      next: null,
+      ...(!firstLoad && { previous: this.current, current: pageUrl }),
+    });
 
-    if (!utils.areEqual(this.animationId, id)) return;
-
-    // Leave workflow
-    await this.leave(transition, state);
-    this.setState({ previous: this.current, current: pageUrl, next: null });
-    state = this.getState();
-
-    if (!utils.areEqual(this.animationId, id)) return;
-
-    // Enter workflow
-    await this.enter(nextRoute, transition, state);
+    // Enter/Once workflow
+    await this[!firstLoad ? "enter" : "once"](nextRoute, transition, state, id);
   }
 
   getMatchingTransition(firstLoad) {
@@ -174,14 +170,28 @@ export default class Router {
     });
     if (!found) {
       found = this._transitions.find(({ leave, enter, once }) => {
-        return (
-          utils.isFn(leave) ||
-          utils.isFn(enter) ||
-          (firstLoad && utils.isFn(once))
-        );
+        return isFn(leave) || isFn(enter) || (firstLoad && isFn(once));
       });
     }
     return found;
+  }
+
+  removeClickOnRouterLinks() {
+    for (const link of [...this._root.querySelectorAll("a[href")]) {
+      link.removeEventListener(
+        "click",
+        this.handleClickOnRouterLinks.bind(this)
+      );
+    }
+  }
+
+  handleClickOnRouterLinks(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const url = e.target.getAttribute("href");
+    const pathname = document.location.pathname;
+    if (pathname === url || (this._preventRunning && this._isAnimated)) return;
+    this._history.push(url);
   }
 
   _handleLinks(container = document) {
@@ -198,19 +208,7 @@ export default class Router {
       throw new Error("No links match with provided routes paths");
 
     for (const link of matchedLinks) {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const url = link.getAttribute("href");
-        const pathname = document.location.pathname;
-        if (pathname === url) return;
-        if (this._preventRunning && this._isAnimated) return;
-        this._history.pushState(
-          { state: this._linkUrlToIdentifier(url) },
-          link.getAttribute("data-history") || this._linkUrlToIdentifier(url),
-          url
-        );
-      });
+      link.addEventListener("click", this.handleClickOnRouterLinks.bind(this));
     }
   }
 

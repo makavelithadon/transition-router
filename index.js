@@ -1,5 +1,9 @@
 import routes from "./pages/index.js";
 import Router from "./router";
+import gsap from "gsap";
+import Scrollbar from "smooth-scrollbar";
+
+// Scrollbar.use(OverscrollPlugin);
 
 const promisify = (fn) => new Promise((r) => fn(r));
 
@@ -79,7 +83,6 @@ function panelAnimation() {
         duration: 0.75,
       }
     );
-    gsap.set(".anim", { opacity: 0 });
   });
 }
 
@@ -118,34 +121,44 @@ function leaveAnimation() {
   });
 }
 
+let scrollbar;
+let yAxis = 0;
+
 const appRouter = new Router({
-  preventRunning: true,
   root: ".container",
+  // preventRunning: true,
   routes,
   hooks: {
     once: (data) => console.log("Once", data),
-    afterOnce: (data) => console.log("After once", data),
+    afterOnce: (data) => {
+      console.log("After once", data);
+    },
     enter: (data) => {
+      if (!scrollbar) {
+        scrollbar = Scrollbar.init(document.getElementById("scrollable"), {
+          damping: 0.05,
+        });
+        scrollbar.addListener((status) => {
+          console.log({ status });
+        });
+      }
+      window.setTimeout(() => {
+        scrollbar.scrollTo(0, yAxis, 0);
+        scrollbar.scrollTo(0, 0, 500);
+      });
       for (const link of [...document.querySelectorAll(".links a")]) {
         link.classList.remove("is-active");
       }
       document
         .querySelector(`.links a[href="${data.current}"]`)
         .classList.add("is-active");
-      // console.log("Global hook enter with data", data);
-      window.setTimeout(() =>
-        window.scrollTo({
-          top: 0,
-          left: 0,
-          behavior: "smooth",
-        })
-      );
     },
     leave: (data) => {
       console.log("Leave", data);
     },
     afterLeave(data) {
       console.log("After leave", data);
+      yAxis = scrollbar.offset.y;
     },
     afterEnter(data) {
       console.log("After enter", data);
@@ -190,5 +203,4 @@ const appRouter = new Router({
       },
     },
   ],
-  preventRunning: true,
 });

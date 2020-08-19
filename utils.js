@@ -10,5 +10,5 @@ export function isObjectEmpty(n) {
 }
 
 export function areEqual(n, m) {
-  return n === m;
+  return Object.is(n, m);
 }
