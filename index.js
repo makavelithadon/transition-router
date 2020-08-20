@@ -126,6 +126,7 @@ let yAxis = 0;
 
 const appRouter = new Router({
   root: ".container",
+  debug: true,
   // preventRunning: true,
   routes,
   hooks: {
@@ -133,7 +134,9 @@ const appRouter = new Router({
     afterOnce: (data) => {
       console.log("After once", data);
     },
+    beforeEnter: (data) => console.log("Before enter", data),
     enter: (data) => {
+      console.log("Enter", data);
       if (!scrollbar) {
         scrollbar = Scrollbar.init(document.getElementById("scrollable"), {
           damping: 0.05,
@@ -142,16 +145,16 @@ const appRouter = new Router({
           console.log({ status });
         });
       }
-      window.setTimeout(() => {
-        scrollbar.scrollTo(0, yAxis, 0);
-        scrollbar.scrollTo(0, 0, 500);
-      });
       for (const link of [...document.querySelectorAll(".links a")]) {
         link.classList.remove("is-active");
       }
       document
         .querySelector(`.links a[href="${data.current}"]`)
         .classList.add("is-active");
+    },
+    beforeLeave(data) {
+      console.log("Before leave", data);
+      scrollbar.scrollTo(0, 0, 500);
     },
     leave: (data) => {
       console.log("Leave", data);
@@ -167,15 +170,12 @@ const appRouter = new Router({
   transitions: [
     {
       async once(data) {
-        console.log("Once", data);
         return panelAnimation();
       },
       leave(data) {
-        console.log("Leave", data);
         return leaveAnimation();
       },
       enter(data) {
-        console.log("Enter", data);
         return enterAnimation();
       },
     },
@@ -183,22 +183,18 @@ const appRouter = new Router({
       from: { route: "/about" },
       to: { route: "/works" },
       leave(data) {
-        console.log("Leave from /about", data);
         return zoomOutAnimation();
       },
       enter(data) {
-        console.log("Enter to /works", data);
         return zoomInAnimation();
       },
     },
     {
       to: { route: "/about" },
       enter(data) {
-        console.log("Enter to /about", data);
         return specialAnimation();
       },
       leave(data) {
-        console.log("Leave from /about", data);
         return leaveAnimation();
       },
     },
