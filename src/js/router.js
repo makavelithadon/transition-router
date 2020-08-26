@@ -1,6 +1,6 @@
 import history from "history/browser";
 import { v4 as uuidv4 } from "uuid";
-import { areEqual, isFn } from "./utils";
+import { areEqual, isFn } from "@js/utils";
 
 function getDefaultHooks() {
   return {
@@ -133,7 +133,7 @@ export default class Router {
   handleShouldAnimationContinue(animationId, { current, next }) {
     if (!areEqual(this.animationId, animationId)) {
       throw new Error(
-        `Stopped animation ${animationId} from ${current} to ${next}`
+        `Cancel animation ${animationId} from ${current} to ${next}`
       );
     }
   }

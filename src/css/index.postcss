@@ -1,0 +1,67 @@
+/* third party stuff */
+
+@import "normalize.css";
+
+/* variables stuff */
+
+@import "variables/colors.postcss";
+@import "variables/sizes.postcss";
+
+/* miscellaneous stuff */
+
+@import "breakpoints.postcss";
+
+/* layout stuff */
+
+@import "layout/header.postcss";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: $bg;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#scrollable {
+  width: 100%;
+  height: 100vh;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#splash {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(from top, $secondary, $black);
+}
+
+.scrollbar-track-y {
+  width: 6px !important;
+}
+
+.scrollbar-thumb {
+  width: 5px !important;
+  background: $primary !important;
+  top: 1px !important;
+}

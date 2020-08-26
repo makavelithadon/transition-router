@@ -1,0 +1,27 @@
+.header {
+  position: sticky;
+  top: 0;
+  > * {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+    padding: 0 10vw;
+    @media (--medium) {
+      height: 160px;
+    }
+  }
+}
+
+#logo {
+  width: 27px;
+  height: 24px;
+  @media (--medium) {
+    width: 48px;
+    height: 43px;
+  }
+}
+
+.menu {
+}

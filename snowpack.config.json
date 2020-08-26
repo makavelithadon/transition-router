@@ -1,6 +1,0 @@
-{
-  "devOptions": {
-    "fallback": "./index.html"
-  },
-  "plugins": ["@snowpack/plugin-babel"]
-}
