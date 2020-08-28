@@ -16,7 +16,14 @@ module.exports = {
     [
       "@snowpack/plugin-run-script",
       {
-        cmd: "postcss src/css/index.postcss -o src/css/index.css",
+        cmd: "postcss --verbose src/css/index.postcss -o src/css/index.css",
+        watch: "$1 --watch",
+      },
+    ],
+    [
+      "@snowpack/plugin-run-script",
+      {
+        cmd: "eleventy",
         watch: "$1 --watch",
       },
     ],

@@ -1,35 +1,62 @@
+import yucoImg from "@app/img/yuco-poster.jpg";
+
+const projects = [
+  {
+    id: "clustree",
+    name: "Clustree",
+    years: "2019 — 2020",
+    img: "",
+  },
+  {
+    id: "yuco",
+    name: "Yuco",
+    years: "2018",
+    img: yucoImg,
+  },
+  {
+    id: "my-check-experience",
+    name: "MyCheckExperience",
+    years: "2015 — 2017",
+    img: "",
+  },
+];
+
 export default {
   path: "/",
-  title: "Romuald Duconseil -- Front-End Developper -- Home",
+  title: "Romuald Duconseil — Front-End Developper — Home",
   content: `
-  <div>
-    <h1 class="page-title anim">
-      Home
+  <section class="home">
+    <h1>
+      <span class="appearing"><div class="inner highlight">Front-End</div></span>
+      <span class="appearing"><div class="inner">Developer</div></span>
     </h1>
-    <p class="anim">
-      Consequat consequat cillum Lorem mollit officia commodo. Id magna in
-      veniam sint magna non. Dolore culpa do elit nulla aute mollit
-      proident sunt ullamco. Sint cillum id dolore commodo amet mollit
-      sint occaecat nulla do minim voluptate. Nostrud id anim officia sit
-      exercitation. Consequat ipsum in et excepteur. Amet sit non esse et
-      laborum fugiat labore id duis aliquip et ad nulla. Incididunt non
-      anim dolore nulla deserunt sunt officia duis aliquip. Enim do enim
-      ea quis minim nisi sit ipsum tempor incididunt et anim ullamco. Enim
-      id sunt quis Lorem consequat commodo exercitation consectetur
-      consectetur sunt. Cillum non enim ex sint magna mollit nisi officia
-      ad amet ad laborum ex. Ut labore officia occaecat consequat esse
-      eiusmod est enim proident deserunt labore eu. Voluptate qui velit
-      aute non proident deserunt. Occaecat ea pariatur magna tempor amet.
-      Excepteur veniam exercitation officia aliquip amet id irure eiusmod
-      eu laborum cupidatat magna reprehenderit. Nulla amet qui tempor
-      ullamco eu nisi ad nulla cupidatat exercitation quis dolor qui
-      excepteur. Aliqua sit dolor velit ut dolor anim id amet commodo in
-      ad nulla exercitation sit. Aliquip consectetur sint excepteur in
-      nulla. Elit irure sint in aute incididunt aute velit incididunt
-      nulla officia adipisicing eu proident. Fugiat non nulla minim cillum
-      magna cillum proident exercitation incididunt cillum irure Lorem.
+    <p class="fade-in">
+      <span class="ff-medium">Hello</span>,<br />
+      Je m’appelle Romuald Duconseil et je suis <span class="highlight ff-black">Front-End Developer</span> depuis + de 4 ans, basé à Paris, 
+      et spécialisé dans l’utilisation de la librairie JavaScript React.
     </p>
-    <a class="button anim" href="/about">About me</a>
-  </div>
+    <p class="fade-in">
+      J’aime relever des nouveaux challenges et m’améliorer dans mon domaine,
+      mais aussi acquérir de nouvelles compétences.
+    </p>
+    <div style="text-align: center;" class="absolute bottom center">
+      <span class="contextual-action bottom" data-action="scroll"></span>
+    </div>
+  </section>
+  <section>
+    <ul class="projects-list">
+      ${projects
+        .map(
+          (project) =>
+            `<li style="background-image: url(${project.img});" class="project-item">
+              <a class="project__link" href="/projects/${project.id}">
+                <h1 class="project__name">${project.name}</h1>
+                <h2 class="project__years">${project.years}</h2>
+              </a>
+            </li>`
+        )
+        .join("")}
+    </ul>
+  </section>
 `,
 };

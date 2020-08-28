@@ -2,18 +2,25 @@
 
 @import "normalize.css";
 
+/* core stuff */
+
+@import "./core/breakpoints.postcss";
+@import "./core/mixins.postcss";
+
 /* variables stuff */
 
-@import "variables/colors.postcss";
-@import "variables/sizes.postcss";
-
-/* miscellaneous stuff */
-
-@import "breakpoints.postcss";
+@import "./variables/colors.postcss";
+@import "./variables/sizes.postcss";
+@import "./variables/fonts.postcss";
 
 /* layout stuff */
 
-@import "layout/header.postcss";
+@import "./layout/header.postcss";
+@import "./layout/projects-list.postcss";
+
+/* pages stuff */
+
+@import "./page/home.postcss";
 
 *,
 *::before,
@@ -32,6 +39,26 @@ body {
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  font-family: $font, system-ui;
+  font-smoothing: antialiased;
+}
+
+::selection {
+  background: $primary;
+}
+
+main {
+  padding: 0 6vw;
+  transition: 0.35s ease-out;
+  @media (--medium) {
+    padding: 0 10vw;
+  }
+  @media (--large) {
+    padding: 0 12vw;
+  }
+  @media (--xlarge) {
+    padding: 0 15vw;
+  }
 }
 
 #scrollable {
@@ -45,7 +72,8 @@ ul {
   margin: 0;
 }
 
-#splash {
+#splash,
+#menu {
   position: fixed;
   left: 0;
   top: 0;
@@ -53,15 +81,143 @@ ul {
   bottom: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(from top, $secondary, $black);
+  background: linear-gradient(to bottom, $secondary 10%, $original-black 110%);
 }
 
 .scrollbar-track-y {
-  width: 6px !important;
+  width: 11px !important;
 }
 
 .scrollbar-thumb {
-  width: 5px !important;
-  background: $primary !important;
+  width: 10px !important;
+  background: $grey !important;
   top: 1px !important;
+  border-radius: 0 !important;
+}
+
+h1 {
+  font-family: $font-black;
+  font-size: 1.875em;
+  margin-bottom: 1em;
+  font-size-responsive: 1.875em 4em $s $xl;
+  line-height: 1em;
+  color: $black;
+}
+
+p {
+  color: $black;
+  font-size-responsive: 0.9em 1em $s $l;
+  line-height: 1.5em;
+}
+
+.highlight {
+  @mixin highlight;
+}
+
+.appearing {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  .inner {
+    display: inline-block;
+  }
+}
+
+section {
+  position: relative;
+  min-height: 100vh;
+  padding-top: 160px;
+  padding-bottom: 120px;
+}
+
+#splash,
+#menu {
+  z-index: 1;
+}
+
+#menu {
+  display: none;
+}
+
+#splash {
+  z-index: 10;
+  background: none;
+  background-color: $secondary;
+}
+
+.ff {
+  &-medium {
+    font-family: $font-medium;
+  }
+
+  &-black {
+    font-family: $font-black;
+  }
+
+  &-regular {
+    font-family: $font;
+  }
+}
+
+.block {
+  display: block;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.contextual-action {
+  @mixin contextualAction;
+}
+
+#splash {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .splash__logo-container {
+    width: 20vw;
+    height: 20vw;
+    box-shadow: 0 0 1px 7px rgba($black, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @media (orientation: portrait) {
+      width: 20vh;
+      height: 20vh;
+    }
+  }
+  .logo {
+    width: 50%;
+    height: 50%;
+    opacity: 0;
+  }
+}
+
+.contextual-action.top {
+  @mixin contextualAction top;
+}
+
+.contextual-action.bottom {
+  @mixin contextualAction bottom;
+}
+
+.contextual-action.right {
+  @mixin contextualAction right;
+}
+
+.contextual-action.left {
+  @mixin contextualAction left;
+}
+
+.absolute {
+  position: absolute;
+  &.center {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.bottom {
+  bottom: 0;
 }

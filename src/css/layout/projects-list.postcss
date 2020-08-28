@@ -1,0 +1,21 @@
+.project-item {
+  background-color: $blue;
+  height: 240px;
+  margin: 0 auto;
+  background-size: cover;
+  filter: grayscale(1);
+  transition: filter 1s ease-out;
+  @media (--large) {
+    height: 400px;
+  }
+  &:hover {
+    filter: none;
+  }
+  h1,
+  h2 {
+    margin: 0;
+  }
+  &:not(:last-child) {
+    margin-bottom: 6vh;
+  }
+}

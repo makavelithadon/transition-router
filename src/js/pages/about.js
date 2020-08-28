@@ -1,8 +1,8 @@
 export default {
   path: "/about",
-  title: "Romuald Duconseil -- Front-End Developper -- About",
+  title: "Romuald Duconseil — Front-End Developper — About",
   content: `
-  <div>
+  <section class="about">
     <h1 class="page-title anim">
       About
     </h1>
@@ -28,6 +28,6 @@ export default {
     </p>
     <a class="button anim" href="/">Back to Home</a>
     <a class="button anim" href="/works">Go to Works</a>
-  </div>
+  </section>
 `,
 };

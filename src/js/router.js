@@ -195,10 +195,10 @@ export default class Router {
     }
   }
 
-  handleClickOnRouterLinks(e) {
+  handleClickOnRouterLinks(e, link) {
     e.preventDefault();
     e.stopPropagation();
-    const url = e.target.getAttribute("href");
+    const url = link.getAttribute("href");
     const pathname = document.location.pathname;
     if (pathname === url || (this._preventRunning && this._isAnimated)) return;
     this._history.push(url);
@@ -211,15 +211,18 @@ export default class Router {
       console.log("No links to parse.");
       return;
     }
+
     const matchedLinks = this.routes
       .map((route) => container.querySelector(`a[href="${route.path}"]`))
       .filter(Boolean);
 
-    if (!matchedLinks.length)
+    if (container === document && !matchedLinks.length)
       throw new Error("No links match with provided routes paths");
 
     for (const link of matchedLinks) {
-      link.addEventListener("click", this.handleClickOnRouterLinks.bind(this));
+      link.addEventListener("click", (e) =>
+        this.handleClickOnRouterLinks(e, link)
+      );
     }
   }
 

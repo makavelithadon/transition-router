@@ -7,8 +7,14 @@ const IMG_FOLDER = "img";
 
 const assets = path.join(ROOT, ASSETS_FOLDER);
 const images = path.join(assets, IMG_FOLDER);
+const js = path.join(assets, "js");
+const css = path.join(assets, "css");
+const fonts = path.join(css, "font");
 
 module.exports = {
   assets,
   images,
+  js,
+  css,
+  fonts,
 };

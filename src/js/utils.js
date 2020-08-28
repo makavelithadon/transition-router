@@ -12,3 +12,7 @@ export function isObjectEmpty(n) {
 export function areEqual(n, m) {
   return Object.is(n, m);
 }
+
+export function promisify(fn) {
+  return new Promise((r) => fn(r));
+}

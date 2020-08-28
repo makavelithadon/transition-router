@@ -36,10 +36,15 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
+    "@11ty/eleventy": "^0.11.0",
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.11.4",
     "@babel/preset-env": "^7.11.0",
     "@snowpack/plugin-run-script": "^2.1.1",
+    "postcss-custom-selectors": "^5.1.2",
+    "postcss-font-smoothing": "^0.1.0",
+    "postcss-mixins": "^6.2.3",
+    "postcss-responsive-font": "^1.0.6",
     "sharp": "^0.25.4"
   }
 }

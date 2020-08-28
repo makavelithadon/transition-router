@@ -6,39 +6,48 @@ const presetEnv = require("postcss-preset-env");
 const autoprefixer = require("autoprefixer");
 const nested = require("postcss-nested");
 const vars = require("postcss-simple-vars");
-const fontMagician = require("postcss-font-magician");
 const rucksack = require("rucksack-css");
 const each = require("postcss-each");
 const eachVars = require("postcss-each-variables");
 const cssNano = require("cssnano");
 const conditionals = require("postcss-conditionals");
 const customMedia = require("postcss-custom-media");
+const responsiveFont = require("postcss-responsive-font");
+const fontSmoothing = require("postcss-font-smoothing");
+const mixins = require("postcss-mixins");
+const customSelectors = require("postcss-custom-selectors");
 
 const breakpoints = require("./config/breakpoints");
 
-/* const functions = require("postcss-functions")({
+/*const functions = require("postcss-functions")({
   functions: {
     getMedias() {
       return breakpoints;
     },
+    darken2() {
+      return "oops";
+    },
   },
-}); */
+});*/
 
 const syntax = "postcss-scss";
 
 const plugins = [
+  //functions,
+  fontSmoothing,
   atImport,
   presetEnv,
   autoprefixer,
-  nested,
-  eachVars,
+  mixins,
+  conditionals,
   each,
   vars,
-  fontMagician,
+  nested,
+  eachVars,
+  customSelectors,
   rucksack,
-  conditionals,
   customMedia,
-  // functions,
+  responsiveFont,
 ];
 
 const env = process.env.NODE_ENV;
