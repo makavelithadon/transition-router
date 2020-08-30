@@ -1,0 +1,75 @@
+.project-article {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88vw;
+  @media (--medium) {
+    width: 80vw;
+  }
+  @media (--large) {
+    width: 76vw;
+  }
+  @media (--xlarge) {
+    width: 70vw;
+  }
+  .project-card {
+    position: relative;
+    flex: 1;
+    height: 60%;
+    &:hover {
+      .project-card__img {
+        opacity: 0.9 !important;
+      }
+    }
+    h1,
+    h2 {
+      margin: 0;
+    }
+    &:not(:last-child) {
+      margin-bottom: 20vh;
+    }
+    &__img-container {
+      position: relative;
+      overflow: hidden;
+      width: 80%;
+      height: 100%;
+      background-color: $original-black;
+    }
+    &__details {
+      position: absolute 70% 0 auto auto;
+      transform: translateY(-50%);
+      text-align: right;
+      z-index: 2;
+    }
+    &__name {
+      color: $white;
+    }
+    &__years {
+      color: rgba($white, 0.4);
+      font-family: $font;
+      font-size-responsive: 0.5em 1.75em $s $xl;
+    }
+    &__link {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    &__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.1;
+      transition: 1s ease-in-out;
+    }
+    &__count {
+      padding: 0 18px;
+      position: absolute auto auto 0 0;
+      font-family: $font-black;
+      font-size-responsive: 1em 2.5em $s $xl;
+      z-index: 2;
+      color: $primary;
+      border-bottom: 4px solid currentColor;
+    }
+  }
+}

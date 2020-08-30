@@ -5,6 +5,7 @@
 /* core stuff */
 
 @import "./core/breakpoints.postcss";
+@import "./core/custom-selectors.postcss";
 @import "./core/mixins.postcss";
 
 /* variables stuff */
@@ -16,7 +17,8 @@
 /* layout stuff */
 
 @import "./layout/header.postcss";
-@import "./layout/projects-list.postcss";
+@import "./layout/projects.postcss";
+@import "./layout/project-card.postcss";
 
 /* pages stuff */
 
@@ -47,7 +49,7 @@ body {
   background: $primary;
 }
 
-main {
+section {
   padding: 0 6vw;
   transition: 0.35s ease-out;
   @media (--medium) {
@@ -95,13 +97,16 @@ ul {
   border-radius: 0 !important;
 }
 
-h1 {
+:--heading {
   font-family: $font-black;
-  font-size: 1.875em;
   margin-bottom: 1em;
-  font-size-responsive: 1.875em 4em $s $xl;
   line-height: 1em;
   color: $black;
+}
+
+h1 {
+  font-size: 1.875em;
+  font-size-responsive: 1.875em 4em $s $xl;
 }
 
 p {

@@ -5,6 +5,7 @@ header {
   right: 0;
   width: 100%;
   z-index: 1;
+  pointer-events: none;
 }
 
 .header__container {
@@ -27,21 +28,26 @@ header {
   }
 }
 
-.logo {
-  z-index: 1;
-  svg {
-    width: 28px;
-    height: 24px;
-    @media (--large) {
-      width: 49px;
-      height: 43px;
-    }
+svg.logo {
+  width: 28px;
+  height: 24px;
+  @media (--large) {
+    width: 49px;
+    height: 43px;
   }
+}
+
+a.logo {
+  z-index: 1;
+  pointer-events: all;
 }
 
 .logo {
   .r-shape {
     fill: $original-black;
+    .light & {
+      display: none;
+    }
   }
   .d-shape {
     fill: $pink;
@@ -57,6 +63,7 @@ header {
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   z-index: 10;
+  pointer-events: all;
   &__dot {
     position: relative;
     float: left;

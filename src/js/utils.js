@@ -16,3 +16,7 @@ export function areEqual(n, m) {
 export function promisify(fn) {
   return new Promise((r) => fn(r));
 }
+
+export function getStyle(element, property) {
+  return window.getComputedStyle(element).getPropertyValue(property);
+}

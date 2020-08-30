@@ -2,10 +2,13 @@ import { run as runMenu } from "@js/animations/menu";
 import { run as runSplash } from "@js/animations/splash";
 import routes from "@js/pages/index.js";
 import Router from "@js/router";
-import { promisify } from "@js/utils";
+import { promisify, getStyle } from "@js/utils";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Scrollbar from "smooth-scrollbar";
+import easing from "@js/easing";
+
+console.log({ easing });
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,31 +30,93 @@ async function main() {
       { scrollTrigger: ".fade-in", opacity: 0, y: 20, delay: 1 },
       "-=.1"
     );
-    for (const project of [...document.querySelectorAll(".project-item")]) {
-      gsap.from(project, {
-        scrollTrigger: {
-          trigger: project,
-          start: "bottom 96%",
-        },
-        opacity: 0,
-        ease: "power4.inOut",
-        duration: 0.8,
-        delay: 0.25,
+
+    const scrollToElements = document.querySelectorAll(`[data-scrollto]`);
+    const contextualAction = document.querySelector(".contextual-action");
+
+    for (const element of [...scrollToElements]) {
+      element.addEventListener("click", (e) => {
+        const reached = document.querySelector(
+          element.getAttribute("data-scrollto")
+        );
+        const y = scrollbar.offset.y + reached.getBoundingClientRect().y + 1;
+        scrollbar.scrollTo(0, y, 1000, {
+          easing: easing.easeInOutCubic,
+        });
       });
     }
 
-    const contextInfo = document.querySelector(".context-info");
-
-    const projectsList = document.querySelector(".projects-list");
-    contextInfo.addEventListener("click", () => {
-      scrollbar.scrollTo(0, projectsList.getBoundingClientRect().y - 50, 1500);
-    });
-
-    gsap.from(contextInfo, {
+    gsap.from(contextualAction, {
+      scrollTrigger: contextualAction,
       opacity: 0,
       y: 80,
       ease: "power2.out",
       duration: 1,
+    });
+
+    for (const { element, triggerElement } of [
+      ...document.querySelectorAll(".project-card__details"),
+    ].map((el, index) => ({
+      element: el,
+      triggerElement: [...document.querySelectorAll(".project-article")][index],
+    }))) {
+      gsap.to(element, {
+        yPercent: -400,
+        ease: "none",
+        scrollTrigger: {
+          trigger: triggerElement,
+          scrub: true,
+        },
+      });
+    }
+
+    const nodes = [...document.querySelectorAll(".project-card__img")].map(
+      (el, index) => ({
+        element: el,
+        triggerElement: [...document.querySelectorAll(".project-article")][
+          index
+        ],
+      })
+    );
+    nodes.forEach(({ element, triggerElement }, index) => {
+      console.log(this);
+      gsap.to(element, {
+        scrollTrigger: {
+          trigger: triggerElement,
+          start: "center bottom",
+          end: "center top",
+          onEnter: () => {
+            gsap.to(`.project-card__img`, {
+              opacity: 0.1,
+              ease: "power2.out",
+              duration: 0.325,
+            });
+            gsap.to(element, { opacity: 1, ease: "power2.in", duration: 0.5 });
+          },
+          onEnterBack: () => {
+            gsap.to(`.project-card__img`, {
+              opacity: 0.1,
+              ease: "power2.out",
+              duration: 0.325,
+            });
+            gsap.to(element, { opacity: 1, ease: "power2.in", duration: 0.5 });
+          },
+          onLeave: () => {
+            gsap.to(element, {
+              opacity: 0.1,
+              ease: "power2.out",
+              duration: 0.325,
+            });
+          },
+          onLeaveBack: () => {
+            gsap.to(element, {
+              opacity: 0.1,
+              ease: "power2.out",
+              duration: 0.325,
+            });
+          },
+        },
+      });
     });
   };
 
