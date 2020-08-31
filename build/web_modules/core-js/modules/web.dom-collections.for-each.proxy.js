@@ -1,1 +1,0 @@
-export default "/web_modules/core-js/modules/web.dom-collections.for-each";
