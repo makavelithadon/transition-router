@@ -2,7 +2,7 @@ const fs = require("fs");
 const {
   paths: { fonts: fontsPath },
   utils: { getRelativePath },
-} = require("./../../src/config");
+} = require("../../src/config/index");
 const { mount: snowpackMount } = require(`${process.cwd()}/snowpack.config.js`);
 
 const fonts = fs.readdirSync(fontsPath);

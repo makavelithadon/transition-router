@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const sharp = require("sharp");
-const { paths, breakpoints } = require("../src/config");
+const { paths, breakpoints } = require("../src/config/index");
 const { isDirectory, mkDir, replaceAll } = require("./utils");
 
 const DEST_FOLDER = path.join(paths.images, "build");

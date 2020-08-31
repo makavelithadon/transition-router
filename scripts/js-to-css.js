@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { paths, ...restConfig } = require("../src/config");
+const { paths, ...restConfig } = require("../src/config/index.js");
 const rimraf = require("rimraf");
 
 const cssExtension = "postcss";

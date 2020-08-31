@@ -28,5 +28,6 @@ module.exports = {
         watch: "$1 --watch",
       },
     ],
+    ["@snowpack/plugin-webpack", {}],
   ],
 };

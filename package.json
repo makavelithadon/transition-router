@@ -13,7 +13,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.10.4",
     "@snowpack/plugin-babel": "^2.0.3",
+    "@snowpack/plugin-webpack": "^2.0.5",
     "autoprefixer": "^9.8.6",
     "core-js": "3",
     "cssnano": "^4.1.10",
@@ -50,5 +52,6 @@
     "postcss-responsive-font": "^1.0.6",
     "rimraf": "^3.0.2",
     "sharp": "^0.25.4"
-  }
+  },
+  "browserslist": "> 0.25%, not dead, ie 11"
 }
