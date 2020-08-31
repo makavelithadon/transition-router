@@ -440,7 +440,9 @@ h2 {
 }
 
 p {
+  font-family: "Merriweather";
   line-height: 1.5em;
+  font-weight: 400;
   font-size: 0.9em;
 }
 
@@ -471,7 +473,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: rgba(0,0,0, 0.95);
+  background-color: rgba(0,0,0,0.95);
   width: 100%;
   height: 100vh;
   overflow: hidden;
@@ -828,7 +830,7 @@ section.home .context-info {
 
 .scrollbar-thumb {
   width: 10px !important;
-  background: rgba(0,0,0, 0.4) !important;
+  background: #ea3a7a !important;
   top: 1px !important;
   border-radius: 0 !important;
 }
@@ -933,7 +935,7 @@ ul {
 
 .contextual-action::after {
     content: "";
-    background-color: #763aea;
+    background-color: #ea3a7a;
       width: 1px;
       height: 110px;
     transition: transform 0.2s ease-in-out;
@@ -956,7 +958,7 @@ ul {
 #splash .splash__logo-container {
     width: 20vw;
     height: 20vw;
-    box-shadow: 0 0 1px 7px rgba(rgba(0,0,0, 0.8), 0.2);
+    box-shadow: 0 0 1px 7px rgba(rgba(0,0,0,0.8), 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -997,7 +999,7 @@ ul {
 
 .contextual-action.top::after {
     content: "";
-    background-color: #763aea;
+    background-color: #ea3a7a;
       width: 1px;
       height: 110px;
     transition: transform 0.2s ease-in-out;
@@ -1032,7 +1034,7 @@ ul {
 
 .contextual-action.bottom::after {
     content: "";
-    background-color: #763aea;
+    background-color: #ea3a7a;
       width: 1px;
       height: 110px;
     transition: transform 0.2s ease-in-out;
@@ -1065,7 +1067,7 @@ ul {
 
 .contextual-action.right::after {
     content: "";
-    background-color: #763aea;
+    background-color: #ea3a7a;
       width: 110px;
       height: 1px;
     transition: transform 0.2s ease-in-out;
@@ -1099,7 +1101,7 @@ ul {
 
 .contextual-action.left::after {
     content: "";
-    background-color: #763aea;
+    background-color: #ea3a7a;
       width: 110px;
       height: 1px;
     transition: transform 0.2s ease-in-out;

@@ -2,13 +2,10 @@ import { run as runMenu } from "@js/animations/menu";
 import { run as runSplash } from "@js/animations/splash";
 import routes from "@js/pages/index.js";
 import Router from "@js/router";
-import { promisify, getStyle } from "@js/utils";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Scrollbar from "smooth-scrollbar";
 import easing from "@js/easing";
-
-console.log({ easing });
 
 gsap.registerPlugin(ScrollTrigger);
 

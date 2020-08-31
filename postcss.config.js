@@ -17,23 +17,9 @@ const fontSmoothing = require("postcss-font-smoothing");
 const mixins = require("postcss-mixins");
 const customSelectors = require("postcss-custom-selectors");
 
-const breakpoints = require("./config/breakpoints");
-
-/*const functions = require("postcss-functions")({
-  functions: {
-    getMedias() {
-      return breakpoints;
-    },
-    darken2() {
-      return "oops";
-    },
-  },
-});*/
-
 const syntax = "postcss-scss";
 
 const plugins = [
-  //functions,
   fontSmoothing,
   atImport,
   presetEnv,

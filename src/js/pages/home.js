@@ -11,7 +11,7 @@ const projects = [
   },
   {
     id: "yuco",
-    name: 'Yuco  <span class="small">(ex WeHobby)</span>',
+    name: 'Yuco  <span class="small ff-medium">(ex WeHobby)</span>',
     years: "2018",
     img: yucoImg,
     color: "#e54562",
@@ -35,7 +35,7 @@ export default {
       <span class="appearing"><div class="inner">Developer</div></span>
     </h1>
     <p class="fade-in">
-      <span class="ff-medium">Hello</span>,<br />
+      Hello,<br />
       Je m’appelle Romuald Duconseil et je suis <span class="highlight ff-black">Front-End Developer</span> depuis + de 4 ans, basé à Paris, 
       et spécialisé dans l’utilisation de la librairie JavaScript React.
     </p>

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const sharp = require("sharp");
-const { paths, breakpoints } = require("./../config");
+const { paths, breakpoints } = require("../src/config");
 const { isDirectory, mkDir, replaceAll } = require("./utils");
 
 const DEST_FOLDER = path.join(paths.images, "build");
@@ -43,7 +43,9 @@ function createResponsiveImages(image) {
   if (!originaleWidth) return;
 
   const widths = [
-    ...breakpoints.filter((breakpoint) => breakpoint <= originaleWidth),
+    ...breakpoints.originalValues.filter(
+      (breakpoint) => breakpoint <= originaleWidth
+    ),
     originaleWidth,
   ];
 

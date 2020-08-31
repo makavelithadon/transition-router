@@ -1,5 +1,4 @@
 module.exports = function (eleventyConfig) {
-  //eleventyConfig.setPugOptions({ debug: true });
   return {
     dataTemplateEngine: "pug",
     dir: {
