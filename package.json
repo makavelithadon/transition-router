@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "snowpack dev",
+    "dev": "run-p script:* && snowpack dev",
     "build": "snowpack build",
-    "images": "node scripts/images.js",
-    "js-to-css": "node scripts/js-to-css.js"
+    "script:images": "node scripts/images.js",
+    "script:cjs-to-esm": "node scripts/cjs-to-esm.js",
+    "script:js-to-css": "node scripts/js-to-css.js"
   },
   "keywords": [],
   "author": "",
@@ -37,7 +38,8 @@
     "rucksack-css": "^1.0.2",
     "smooth-scrollbar": "^8.5.2",
     "snowpack": "^2.7.7",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
+    "yarn-run-all": "^3.1.1"
   },
   "devDependencies": {
     "@11ty/eleventy": "^0.11.0",

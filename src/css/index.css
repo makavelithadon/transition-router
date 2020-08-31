@@ -398,7 +398,7 @@ h1,h2,h3,h4,h5,h6,p {
 h1,h2,h3,h4,h5,h6 {
   font-family: "Fivo Sans Black";
   margin-bottom: 1em;
-  line-height: 1em;
+  line-height: 0.95em;
 }
 
 h1 {
@@ -409,14 +409,14 @@ h1 {
 @media (min-width:20em) {
 
   h1 {
-    font-size: 4em;
+    font-size: 5em;
   }
 }
 
-@media (min-width:20em) and (max-width:80em) {
+@media (min-width:20em) and (max-width:160em) {
 
   h1 {
-    font-size: calc(1.875em + (4 - 1.875) * ( (100vw - 20em) / ( 80 - 20)));
+    font-size: calc(1.875em + (5 - 1.875) * ( (100vw - 20em) / ( 160 - 20)));
   }
 }
 
@@ -428,14 +428,14 @@ h2 {
 @media (min-width:20em) {
 
   h2 {
-    font-size: 3em;
+    font-size: 4.25em;
   }
 }
 
-@media (min-width:20em) and (max-width:80em) {
+@media (min-width:20em) and (max-width:160em) {
 
   h2 {
-    font-size: calc(1.5em + (3 - 1.5) * ( (100vw - 20em) / ( 80 - 20)));
+    font-size: calc(1.5em + (4.25 - 1.5) * ( (100vw - 20em) / ( 160 - 20)));
   }
 }
 
@@ -449,14 +449,14 @@ p {
 @media (min-width:20em) {
 
   p {
-    font-size: 1em;
+    font-size: 1.5em;
   }
 }
 
-@media (min-width:20em) and (max-width:48em) {
+@media (min-width:20em) and (max-width:160em) {
 
   p {
-    font-size: calc(0.9em + (1 - 0.9) * ( (100vw - 20em) / ( 48 - 20)));
+    font-size: calc(0.9em + (1.5 - 0.9) * ( (100vw - 20em) / ( 160 - 20)));
   }
 }
 
@@ -475,8 +475,8 @@ body {
   padding: 0;
   background-color: rgba(0,0,0,0.95);
   width: 100%;
-  height: 100vh;
-  overflow: hidden;
+  //height: 100vh;
+  //overflow: hidden;
   font-family: "Fivo Sans Regular", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
   font-smoothing: antialiased;
 }
@@ -528,7 +528,7 @@ header {
   left: 0;
   right: 0;
   width: 100%;
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
 }
 
@@ -635,7 +635,7 @@ a.logo {
 
 section.projects {
   background-color: #361870;
-  padding: 0;
+  padding: 18vh 0;
 }
 
 .projects-list {
@@ -646,17 +646,40 @@ section.projects {
 }
 
 .project-article {
-  height: 70vh;
+  min-height: 50vh;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 88vw;
 }
 
-@media (min-width: 48em) {
+@media (min-width: 30em) {
 
 .project-article {
-    height: 100vh
+    min-height: 50vh
+}
+  }
+
+@media (min-height: 650px) {
+
+.project-article {
+    min-height: 35vh
+}
+  }
+
+@media (orientation: landscape) {
+    @media (min-width: 48em) {
+
+.project-article {
+      min-height: 80vh
+}
+    }
+  }
+
+@media (min-width: 80em) {
+
+.project-article {
+    min-height: 100vh
 }
   }
 
@@ -684,12 +707,7 @@ section.projects {
 .project-article .project-card {
     position: relative;
     flex: 1;
-    height: 54%;
   }
-
-.project-article .project-card:hover .project-card__img {
-        opacity: 0.9 !important;
-      }
 
 .project-article .project-card h1,
     .project-article .project-card h2 {
@@ -727,14 +745,14 @@ section.projects {
 @media (min-width:20em) {
 
   .project-article .project-card__name {
-    font-size: 4.5em;
+    font-size: 6em;
   }
 }
 
-@media (min-width:20em) and (max-width:80em) {
+@media (min-width:20em) and (max-width:160em) {
 
   .project-article .project-card__name {
-    font-size: calc(2em + (4.5 - 2) * ( (100vw - 20em) / ( 80 - 20)));
+    font-size: calc(2em + (6 - 2) * ( (100vw - 20em) / ( 160 - 20)));
   }
 }
 
@@ -747,36 +765,28 @@ section.projects {
 @media (min-width:20em) {
 
   .project-article .project-card__years {
-    font-size: 1.75em;
+    font-size: 2.5em;
   }
 }
 
-@media (min-width:20em) and (max-width:80em) {
+@media (min-width:20em) and (max-width:160em) {
 
   .project-article .project-card__years {
-    font-size: calc(0.5em + (1.75 - 0.5) * ( (100vw - 20em) / ( 80 - 20)));
+    font-size: calc(0.5em + (2.5 - 0.5) * ( (100vw - 20em) / ( 160 - 20)));
   }
 }
 
 .project-article .project-card__link {
-      display: block;
+      display: flex;
       width: 100%;
       height: 100%;
     }
 
-.project-article .project-card__img-crop {
-      position: absolute;
-      width: 100vw;
-      height: 100vh;
-    }
-
 .project-article .project-card__img {
       display: block;
-      position: absolute;
-      left: 50%;
-      width: 100vw;
-      transform: translate(-50%, -50%);
-      top: 50%;
+      width: 100%;
+      opacity: 0.1;
+      transition: 0.8s ease-in-out;
     }
 
 .project-article .project-card__count {
@@ -796,15 +806,51 @@ section.projects {
 @media (min-width:20em) {
 
   .project-article .project-card__count {
-    font-size: 4em;
+    font-size: 6em;
   }
 }
 
-@media (min-width:20em) and (max-width:80em) {
+@media (min-width:20em) and (max-width:160em) {
 
   .project-article .project-card__count {
-    font-size: calc(2em + (4 - 2) * ( (100vw - 20em) / ( 80 - 20)));
+    font-size: calc(2em + (6 - 2) * ( (100vw - 20em) / ( 160 - 20)));
   }
+}
+
+.project-article .project-card:hover .project-card__img {
+        opacity: 0.9;
+      }
+
+.project-article.from-left .project-card__link {
+        flex-direction: row;
+      }
+
+.project-article.from-right .project-card__link {
+        flex-direction: row-reverse;
+      }
+
+.project-article.from-right .project-card__details {
+        text-align-last: left;
+        right: auto;
+        left: 0;
+      }
+
+.project-article.from-right .project-card__count {
+        left: auto;
+        right: 0;
+      }
+
+.img__layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ea3a7a;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transform: translateX(-100%);
 }
 
 /* pages stuff */
@@ -921,7 +967,7 @@ ul {
   flex-direction: row;
   cursor: pointer;
   overflow: hidden;
-    height: 140px;
+    height: 15vh;
     flex-direction: column;
 }
 
@@ -937,16 +983,16 @@ ul {
     content: "";
     background-color: #ea3a7a;
       width: 1px;
-      height: 110px;
+      height: 15vh;
     transition: transform 0.2s ease-in-out;
   }
 
 .contextual-action:hover::before {
-        transform: translateY(10px)
+        transform: translateY(2vh)
     }
 
 .contextual-action:hover::after {
-        transform: translateY(40px)
+        transform: translateY(3vh)
     }
 
 #splash {
@@ -985,7 +1031,7 @@ ul {
   flex-direction: row;
   cursor: pointer;
   overflow: hidden;
-    height: 140px;
+    height: 15vh;
     flex-direction: column-reverse;
 }
 
@@ -1001,16 +1047,16 @@ ul {
     content: "";
     background-color: #ea3a7a;
       width: 1px;
-      height: 110px;
+      height: 15vh;
     transition: transform 0.2s ease-in-out;
   }
 
 .contextual-action.top:hover::before {
-        transform: translateY(-10px)
+        transform: translateY(-2vh)
     }
 
 .contextual-action.top:hover::after {
-        transform: translateY(-40px)
+        transform: translateY(-3vh)
     }
 
 .contextual-action.bottom {
@@ -1020,7 +1066,7 @@ ul {
   flex-direction: row;
   cursor: pointer;
   overflow: hidden;
-    height: 140px;
+    height: 15vh;
     flex-direction: column;
 }
 
@@ -1036,16 +1082,16 @@ ul {
     content: "";
     background-color: #ea3a7a;
       width: 1px;
-      height: 110px;
+      height: 15vh;
     transition: transform 0.2s ease-in-out;
   }
 
 .contextual-action.bottom:hover::before {
-        transform: translateY(10px)
+        transform: translateY(2vh)
     }
 
 .contextual-action.bottom:hover::after {
-        transform: translateY(40px)
+        transform: translateY(3vh)
     }
 
 .contextual-action.right {
@@ -1068,17 +1114,17 @@ ul {
 .contextual-action.right::after {
     content: "";
     background-color: #ea3a7a;
-      width: 110px;
+      width: 15vh;
       height: 1px;
     transition: transform 0.2s ease-in-out;
   }
 
 .contextual-action.right:hover::before {
-        transform: translateX(10px)
+        transform: translateX(2vh)
     }
 
 .contextual-action.right:hover::after {
-        transform: translateX(40px)
+        transform: translateX(3vh)
     }
 
 .contextual-action.left {
@@ -1102,17 +1148,17 @@ ul {
 .contextual-action.left::after {
     content: "";
     background-color: #ea3a7a;
-      width: 110px;
+      width: 15vh;
       height: 1px;
     transition: transform 0.2s ease-in-out;
   }
 
 .contextual-action.left:hover::before {
-        transform: translateX(-10px)
+        transform: translateX(-2vh)
     }
 
 .contextual-action.left:hover::after {
-        transform: translateX(-40px)
+        transform: translateX(-3vh)
     }
 
 .absolute {

@@ -1,0 +1,117 @@
+.project-article {
+  min-height: 40vh;
+  @media (--medium) {
+    min-height: 50vh;
+  }
+  @media (--large) {
+    min-height: 80vh;
+  }
+  @media (--xlarge) {
+    min-height: 100vh;
+  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88vw;
+  @media (--medium) {
+    width: 80vw;
+  }
+  @media (--large) {
+    width: 76vw;
+  }
+  @media (--xlarge) {
+    width: 70vw;
+  }
+  .project-card {
+    position: relative;
+    flex: 1;
+    h1,
+    h2 {
+      margin: 0;
+    }
+    &:not(:last-child) {
+      margin-bottom: 20vh;
+    }
+    &__img-container {
+      position: relative;
+      overflow: hidden;
+      width: 74%;
+      height: 100%;
+      background-color: $original-black;
+    }
+    &__details {
+      position: absolute 70% 0 auto auto;
+      transform: translateY(-50%);
+      text-align: right;
+      z-index: 2;
+    }
+    &__name {
+      color: $white;
+      font-size-responsive: 2em 6em $s $xxxl;
+    }
+    &__years {
+      color: rgba($white, 0.4);
+      font-family: $font;
+      font-size-responsive: 0.5em 2.5em $s $xxxl;
+    }
+    &__link {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+    &__img {
+      display: block;
+      width: 100%;
+      opacity: 0.1;
+      transition: 0.8s ease-in-out;
+    }
+    &__count {
+      padding: 0 0.5em;
+      position: absolute auto auto 0 0;
+      font-family: $font-black;
+      font-size-responsive: 2em 6em $s $xxxl;
+      z-index: 2;
+      color: $white;
+      border-bottom: 4px solid currentColor;
+    }
+    &:hover {
+      .project-card__img {
+        opacity: 0.9;
+      }
+    }
+  }
+  &.from {
+    &-left {
+      .project-card__link {
+        flex-direction: row;
+      }
+    }
+    &-right {
+      .project-card__link {
+        flex-direction: row-reverse;
+      }
+      .project-card__details {
+        text-align-last: left;
+        right: auto;
+        left: 0;
+      }
+      .project-card__count {
+        left: auto;
+        right: 0;
+      }
+    }
+  }
+}
+
+.img__layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $secondary;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transform: translateX(-100%);
+}

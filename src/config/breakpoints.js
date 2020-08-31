@@ -3,15 +3,17 @@ const m = 480;
 const l = 768;
 const xl = 1280;
 const xxl = 1920;
+const xxxl = 2560;
 
 module.exports = {
-  originalValues: [s, m, l, xl, xxl],
+  originalValues: [s, m, l, xl, xxl, xxxl],
   obj: {
-    s: 320,
-    m: 480,
-    l: 768,
-    xl: 1280,
-    xxl: 1920,
+    s,
+    m,
+    l,
+    xl,
+    xxl,
+    xxxl,
   },
   bindings: {
     s: "small",
@@ -19,5 +21,6 @@ module.exports = {
     l: "large",
     xl: "xlarge",
     xxl: "xxlarge",
+    xxxl: "xxxlarge",
   },
 };

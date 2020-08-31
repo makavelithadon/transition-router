@@ -1,3 +1,5 @@
+import config from "@app/config/index.esm";
+
 export const isFn = (n) => n && typeof n === "function";
 
 export function isObject(n) {
@@ -19,4 +21,15 @@ export function promisify(fn) {
 
 export function getStyle(element, property) {
   return window.getComputedStyle(element).getPropertyValue(property);
+}
+
+export function getBreakpoint(value) {
+  const realVal = Object.entries(config.breakpoints.bindings).find(
+    ([k, v]) => v === value
+  )[0];
+  return config.breakpoints.obj[realVal];
+}
+
+export function scrollTo(element, options) {
+  element.scrollIntoView(options || { block: "start", behavior: "smooth" });
 }

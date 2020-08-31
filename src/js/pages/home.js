@@ -1,24 +1,26 @@
-import yucoImg from "@app/img/yuco-poster.jpg";
+import yucoImg from "@app/img/yuco-poster.png";
 import clustreeImg from "@app/img/clustree-poster.png";
 
 const projects = [
   {
     id: "clustree",
-    name: "Clustree",
+    name: '<span class="appearing"><div class="inner">Clustree</div></span>',
     years: "2019 — 2020",
     img: clustreeImg,
     color: "#009aad",
   },
   {
     id: "yuco",
-    name: 'Yuco  <span class="small ff-medium">(ex WeHobby)</span>',
+    name:
+      '<span class="appearing"><div class="inner">Yuco</div></span><span class="appearing"><div class="inner" style="font-size: .6em;">ex WeHobby</div></span>',
     years: "2018",
     img: yucoImg,
     color: "#e54562",
   },
   {
     id: "my-check-experience",
-    name: "MyCheckExperience",
+    name:
+      '<span class="appearing"><div class="inner">MyCheck</div></span><span class="appearing"><div class="inner">Experience</div></span>',
     years: "2015 — 2017",
     img: "",
     color: "#1d99dd",
@@ -34,8 +36,8 @@ export default {
       <span class="appearing"><div class="inner highlight">Front-End</div></span>
       <span class="appearing"><div class="inner">Developer</div></span>
     </h1>
+    <p class="fade-in">Hello,</p>
     <p class="fade-in">
-      Hello,<br />
       Je m’appelle Romuald Duconseil et je suis <span class="highlight ff-black">Front-End Developer</span> depuis + de 4 ans, basé à Paris, 
       et spécialisé dans l’utilisation de la librairie JavaScript React.
     </p>
@@ -58,9 +60,8 @@ export default {
               <div class="project-card">
                 <a href="/projects/${project.id}" class="project-card__link">
                   <div class="project-card__img-container">
-                    <div class="project-card__img-crop">
-                      <img src="${project.img}" class="project-card__img" />
-                    </div>
+                    <div class="img__layer"></div>
+                    <img src="${project.img}" class="project-card__img" />
                   </div>
                   <div class="project-card__details">
                     <h1 class="project-card__name">${project.name}</h1>
