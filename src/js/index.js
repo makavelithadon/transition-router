@@ -70,6 +70,22 @@ async function main() {
       });
     }
 
+    /* for (const { element, triggerElement } of [
+      ...document.querySelectorAll(".project-card__img"),
+    ].map((el, index) => ({
+      element: el,
+      triggerElement: [...document.querySelectorAll(".project-article")][index],
+    }))) {
+      gsap.to(element, {
+        yPercent: 50,
+        ease: "none",
+        scrollTrigger: {
+          trigger: triggerElement,
+          scrub: true,
+        },
+      });
+    } */
+
     const nodes = [...document.querySelectorAll(".project-card__img")].map(
       (el, index) => ({
         element: el,
@@ -91,7 +107,11 @@ async function main() {
               ease: "power2.out",
               duration: 0.325,
             });
-            gsap.to(element, { opacity: 1, ease: "power2.in", duration: 0.5 });
+            gsap.to(element, {
+              opacity: 0.9,
+              ease: "power2.in",
+              duration: 0.5,
+            });
           },
           onEnterBack: () => {
             gsap.to(`.project-card__img`, {
@@ -99,7 +119,11 @@ async function main() {
               ease: "power2.out",
               duration: 0.325,
             });
-            gsap.to(element, { opacity: 1, ease: "power2.in", duration: 0.5 });
+            gsap.to(element, {
+              opacity: 0.9,
+              ease: "power2.in",
+              duration: 0.5,
+            });
           },
           onLeave: () => {
             gsap.to(element, {

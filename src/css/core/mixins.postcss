@@ -1,11 +1,12 @@
-@define-mixin highlight $color: $primary, $select-color: $highlight-color {
+@define-mixin highlight $color: $highlight-color,
+  $select-color: $selection-color {
   color: $color;
   &::selection {
     background: $select-color;
   }
 }
 
-@define-mixin contextualAction $to: bottom, $text-color: $black, $color: $grey-2 {
+@define-mixin contextualAction $to: bottom, $text-color: $fg, $color: $primary {
   $text-gap: 20px;
   $after-stroke: 1px;
   $after-length: 110px;

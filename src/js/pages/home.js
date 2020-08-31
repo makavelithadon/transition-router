@@ -1,5 +1,5 @@
 import yucoImg from "@app/img/yuco-poster.jpg";
-import clustreeImg from "@app/img/clustree-poster.jpg";
+import clustreeImg from "@app/img/clustree-poster.png";
 
 const projects = [
   {
@@ -11,7 +11,7 @@ const projects = [
   },
   {
     id: "yuco",
-    name: "Yuco / ex. WeHobby",
+    name: 'Yuco  <span class="small">(ex WeHobby)</span>',
     years: "2018",
     img: yucoImg,
     color: "#e54562",
@@ -44,7 +44,7 @@ export default {
       mais aussi acquérir de nouvelles compétences.
     </p>
     <div style="text-align: center;" class="absolute bottom center fade-in">
-      <span class="contextual-action bottom" data-action="scroll" data-scrollto=".projects"></span>
+      <span class="contextual-action bottom" data-action="projects" data-scrollto=".projects"></span>
     </div>
   </section>
   <section class="projects">
@@ -58,15 +58,17 @@ export default {
               <div class="project-card">
                 <a href="/projects/${project.id}" class="project-card__link">
                   <div class="project-card__img-container">
-                    <img src="${project.img}" class="project-card__img" />
+                    <div class="project-card__img-crop">
+                      <img src="${project.img}" class="project-card__img" />
+                    </div>
                   </div>
                   <div class="project-card__details">
                     <h1 class="project-card__name">${project.name}</h1>
                     <h2 class="project-card__years">${project.years}</h2>
                   </div>
-                  <span class="project-card__count" style="color: ${
-                    project.color
-                  };">${("0" + (index + 1)).slice(-2)}</span>
+                  <span class="project-card__count">${("0" + (index + 1)).slice(
+                    -2
+                  )}</span>
                 </a>
               </div>
             </li>`
