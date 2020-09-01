@@ -4,14 +4,14 @@ import { areEqual, isFn } from "@js/utils";
 
 function getDefaultHooks() {
   return {
-    once: () => {},
-    afterOnce: () => {},
-    beforeLeave: () => {},
-    leave: () => {},
-    afterLeave: () => {},
-    beforeEnter: () => {},
-    enter: () => {},
-    afterEnter: () => {},
+    once: () => new Promise((r) => r()),
+    afterOnce: new Promise((r) => r()),
+    beforeLeave: new Promise((r) => r()),
+    leave: new Promise((r) => r()),
+    afterLeave: new Promise((r) => r()),
+    beforeEnter: new Promise((r) => r()),
+    enter: new Promise((r) => r()),
+    afterEnter: new Promise((r) => r()),
   };
 }
 
@@ -66,9 +66,11 @@ export default class Router {
     this._root.insertAdjacentHTML("afterbegin", newDom);
   }
 
-  removeFromDom(domToRemove) {
-    if (domToRemove === null) return;
-    this._root.removeChild(domToRemove);
+  removeFromDom() {
+    let children;
+    while ((children = this._root.firstElementChild)) {
+      this._root.removeChild(children);
+    }
   }
 
   getState() {
@@ -92,8 +94,8 @@ export default class Router {
   async leave(transition, state, id) {
     this.handleShouldAnimationContinue(id, state);
     if (this._root.innerHTML.length === 0) return;
-    this.hooks.beforeLeave(state);
-    this.hooks.leave(state);
+    await this.hooks.beforeLeave(state);
+    await this.hooks.leave(state);
     this._isAnimated = true;
     this.removeClickOnRouterLinks();
     if (transition) {
@@ -101,32 +103,32 @@ export default class Router {
     }
     this._isAnimated = false;
     this.handleShouldAnimationContinue(id, state);
-    this.removeFromDom(this._root.firstElementChild);
-    this.hooks.afterLeave(state);
+    this.removeFromDom();
+    await this.hooks.afterLeave(state);
   }
 
   async enter(route, transition, state, id) {
     this.handleShouldAnimationContinue(id, state);
     this.changeRoute(route);
-    this.hooks.beforeEnter(state);
-    this.hooks.enter(state);
+    await this.hooks.beforeEnter(state);
+    await this.hooks.enter(state);
     this._isAnimated = true;
     if (transition) {
       transition.enter && (await transition.enter(state));
     }
-    this.hooks.afterEnter(state);
+    await this.hooks.afterEnter(state);
     this._isAnimated = false;
   }
 
   async once(route, transition, state, id) {
     this.handleShouldAnimationContinue(id, state);
     this._isAnimated = true;
-    this.hooks.once(state);
+    await this.hooks.once(state);
     if (transition) {
       transition.once && (await transition.once(transition, state));
     }
     this._isAnimated = false;
-    this.hooks.afterOnce(state);
+    await this.hooks.afterOnce(state);
     this.enter(route, transition, state, id);
   }
 
@@ -213,15 +215,20 @@ export default class Router {
     }
 
     const matchedLinks = this.routes
-      .map((route) => container.querySelector(`a[href="${route.path}"]`))
+      .map((route) => [
+        ...container.querySelectorAll(`a[href="${route.path}"]`),
+      ])
       .filter(Boolean);
 
     if (container === document && !matchedLinks.length)
       throw new Error("No links match with provided routes paths");
 
-    for (const link of matchedLinks) {
-      link.addEventListener("click", (e) =>
-        this.handleClickOnRouterLinks(e, link)
+    for (const links of matchedLinks) {
+      // there is maybe multi links with the same href path target
+      links.forEach((link) =>
+        link.addEventListener("click", (e) =>
+          this.handleClickOnRouterLinks(e, link)
+        )
       );
     }
   }

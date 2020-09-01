@@ -5,24 +5,55 @@ import Router from "@js/router";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { home as homeTransition } from "@js/transitions/home";
-import animations from "@js/animations";
+import { waitForScroll as waitForScrollToFadeInTop } from "@js/animations/fade-in-top";
+import { waitForScroll as waitForScrollToAppearingLettersTop } from "@js/animations/appearing-letters-top";
+
+import { scrollTo } from "@js/utils";
 
 const GSAP_DEFAULTS = {
   ease: "power3.inOut",
-  duration: 0.7,
+  duration: 0.6,
 };
 
-function initListenedAnimations() {
-  Object.values(animations(GSAP_DEFAULTS)).map((animationFn) => animationFn());
-}
-
 gsap.registerPlugin(ScrollTrigger);
+
+gsap.defaults(GSAP_DEFAULTS);
+
+let elapsedTweens = [];
 
 async function main() {
   initMenu();
 
   function onEnter() {
-    initListenedAnimations();
+    for (const fadeIn of [...document.querySelectorAll(".fade-in")]) {
+      elapsedTweens.push(waitForScrollToFadeInTop(fadeIn));
+    }
+    for (const appearingIn of [
+      ...document.querySelectorAll(".appearing .inner"),
+    ]) {
+      elapsedTweens.push(waitForScrollToAppearingLettersTop(appearingIn));
+    }
+  }
+
+  function onLeave() {
+    let completed = 0;
+    const finishedTweens = elapsedTweens.filter((t) => t.progress() > 0);
+    return new Promise((r) => {
+      if (!finishedTweens.length) r();
+
+      for (const tween of finishedTweens) {
+        const tweenId = tween.vars.id;
+        tween.eventCallback("onReverseComplete", () => {
+          completed += 1;
+          elapsedTweens = elapsedTweens.splice(
+            elapsedTweens.findIndex((t) => t.vars.id === tweenId),
+            1
+          );
+          if (completed === finishedTweens.length) r();
+        });
+        tween.reverse();
+      }
+    });
   }
 
   new Router({
@@ -41,9 +72,11 @@ async function main() {
       },
       beforeLeave(data) {
         console.log("Before leave", data);
+        scrollTo(document.body);
       },
       leave: (data) => {
         console.log("Leave", data);
+        return onLeave();
       },
       afterLeave(data) {
         console.log("After leave", data);

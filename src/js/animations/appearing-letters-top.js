@@ -1,12 +1,20 @@
 import gsap from "gsap";
+import { v4 as uuidv4 } from "uuid";
 
-export default function appearingLettersTop(defaults) {
-  defaults && gsap.defaults(defaults);
-  const nodes = [...document.querySelectorAll(".appearing .inner")];
-  for (const node of nodes) {
-    gsap.from(node, {
-      scrollTrigger: node,
+const defaultNode = ".appearing .inner";
+
+export default function appearingLettersTop(node = defaultNode, options = {}) {
+  return gsap.from(
+    node,
+    {
+      id: uuidv4(),
       y: "110%",
-    });
-  }
+      ...options,
+    },
+    "-=.1"
+  );
+}
+
+export function waitForScroll(node = defaultNode) {
+  return appearingLettersTop(node, { scrollTrigger: node });
 }

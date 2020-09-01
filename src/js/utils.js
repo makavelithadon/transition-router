@@ -30,8 +30,11 @@ export function getBreakpoint(value) {
   return config.breakpoints.obj[realVal];
 }
 
-export function scrollTo(element, options) {
-  element.scrollIntoView(options || { block: "start", behavior: "smooth" });
+export function scrollTo(
+  element,
+  options = { block: "start", behavior: "smooth" }
+) {
+  element.scrollIntoView(options);
 }
 
 export function onWindowResize(fn, initial = true) {
