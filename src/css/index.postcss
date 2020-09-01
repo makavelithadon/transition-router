@@ -21,6 +21,10 @@
 @import "./layout/projects.postcss";
 @import "./layout/project-card.postcss";
 
+/* component stuff */
+
+@import "./component/main-nav.postcss";
+
 /* pages stuff */
 
 @import "./page/home.postcss";
@@ -48,7 +52,8 @@ ul {
   bottom: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, $bg-2 10%, $original-black 110%);
+  background: $fg;
+  pointer-events: all;
 }
 
 .highlight {
@@ -64,18 +69,16 @@ ul {
   }
 }
 
-#splash,
+#splash {
+  z-index: 30;
+}
+
 #menu {
-  z-index: 1;
+  z-index: 2;
 }
 
 #menu {
   display: none;
-}
-
-#splash {
-  z-index: 10;
-  background-color: $bg-2;
 }
 
 .ff {
@@ -157,4 +160,12 @@ ul {
 
 .small {
   font-size: 0.5em;
+}
+
+.fz-2 {
+  font-size: 2em;
+}
+
+.color-secondary {
+  color: $secondary;
 }

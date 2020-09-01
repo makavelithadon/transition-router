@@ -1,4 +1,7 @@
 import gsap from "gsap";
+import config from "@app/config/index.esm.js";
+
+const { colors } = config;
 
 const menuClassname = ".burger";
 const menu = document.querySelector(menuClassname);
@@ -59,7 +62,8 @@ export function run() {
       },
       "-=0.08"
     )
-    .to("#menu", { y: 0, ease: "power3.inOut", duration: 1.5 }, "-=.4");
+    .to("#menu", { y: 0, ease: "power3.inOut", duration: 1.5 }, "-=.4")
+    .to(".r-shape", { fill: colors.black }, "-=0.9");
   menu.addEventListener("click", () => {
     const toggledClass = "toggle-menu";
     document.body.classList.toggle(toggledClass);

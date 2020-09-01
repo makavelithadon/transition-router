@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "run-p script:* && snowpack dev",
+    "dev": "run-p script:* && snowpack dev --reload",
     "build": "snowpack build",
     "script:images": "node scripts/images.js",
     "script:cjs-to-esm": "node scripts/cjs-to-esm.js",
@@ -47,13 +47,17 @@
     "@babel/core": "^7.11.4",
     "@babel/preset-env": "^7.11.0",
     "@snowpack/plugin-run-script": "^2.1.1",
+    "copy-webpack-plugin": "^6.1.0",
     "polished": "^3.6.6",
     "postcss-custom-selectors": "^5.1.2",
     "postcss-font-smoothing": "^0.1.0",
     "postcss-mixins": "^6.2.3",
     "postcss-responsive-font": "^1.0.6",
+    "query-string": "^6.13.1",
+    "responsive-loader": "^2.0.2",
     "rimraf": "^3.0.2",
-    "sharp": "^0.25.4"
+    "sharp": "^0.25.4",
+    "write-file-webpack-plugin": "^4.5.1"
   },
   "browserslist": "> 0.25%, not dead, ie 11"
 }

@@ -1,3 +1,5 @@
+const extendedWebpackConfig = require("./webpack.extended-config");
+
 module.exports = {
   devOptions: {
     fallback: "/index.html",
@@ -27,6 +29,20 @@ module.exports = {
         watch: "$1 --watch",
       },
     ],
-    ["@snowpack/plugin-webpack", {}],
+    [
+      "@snowpack/plugin-webpack",
+      {
+        outputPattern: {
+          assets: "_dist_/img/build/[name].[ext]",
+        },
+        extendConfig: (config) => {
+          config.plugins = [
+            ...config.plugins,
+            ...extendedWebpackConfig.plugins,
+          ];
+          return config;
+        },
+      },
+    ],
   ],
 };

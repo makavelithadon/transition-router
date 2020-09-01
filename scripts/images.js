@@ -44,7 +44,7 @@ function createResponsiveImages(image) {
 
   const widths = [
     ...breakpoints.originalValues.filter(
-      (breakpoint) => breakpoint <= originaleWidth
+      (breakpoint) => breakpoint < originaleWidth
     ),
     originaleWidth,
   ];

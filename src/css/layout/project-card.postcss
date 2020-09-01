@@ -68,7 +68,17 @@
       display: block;
       width: 100%;
       opacity: 0.1;
-      transition: 0.8s ease-in-out;
+      transform: scale(1.3);
+      filter: grayscale(1);
+      transition: filter 1.25s cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 1.25s cubic-bezier(0.23, 1, 0.32, 1);
+      &.is-highlighted {
+        opacity: 0.4;
+      }
+      &:hover {
+        opacity: 0.9 !important;
+        filter: none;
+      }
     }
     &__count {
       padding: 0 0.5em;
@@ -76,13 +86,8 @@
       font-family: $font-black;
       font-size-responsive: 2em 6em $s $xxxl;
       z-index: 2;
-      color: $white;
+      color: $secondary;
       border-bottom: 4px solid currentColor;
-    }
-    &:hover {
-      .project-card__img {
-        opacity: 0.9;
-      }
     }
   }
   &.from {
@@ -108,7 +113,7 @@
   }
 }
 
-.img__layer {
+.img__reveal {
   position: absolute;
   left: 0;
   top: 0;
@@ -118,5 +123,5 @@
   width: 100%;
   height: 100%;
   z-index: 1;
-  transform: translateX(-100%);
+  transform: translateX(-101%);
 }

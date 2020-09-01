@@ -1,18 +1,29 @@
-import { run as runMenu } from "@js/animations/menu";
+import { run as initMenu } from "@js/animations/menu";
 import { run as runSplash } from "@js/animations/splash";
 import routes from "@js/pages/index.js";
 import Router from "@js/router";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import Scrollbar from "smooth-scrollbar";
 import { home as homeTransition } from "@js/transitions/home";
+import animations from "@js/animations";
+
+const GSAP_DEFAULTS = {
+  ease: "power3.inOut",
+  duration: 0.7,
+};
+
+function initListenedAnimations() {
+  Object.values(animations(GSAP_DEFAULTS)).map((animationFn) => animationFn());
+}
 
 gsap.registerPlugin(ScrollTrigger);
 
 async function main() {
-  runMenu();
+  initMenu();
 
-  let scrollbar;
+  function onEnter() {
+    initListenedAnimations();
+  }
 
   new Router({
     root: ".container",
@@ -26,19 +37,10 @@ async function main() {
       beforeEnter: (data) => console.log("Before enter", data),
       enter: (data) => {
         console.log("Enter", data);
-        /*if (!scrollbar) {
-          scrollbar = Scrollbar.init(document.getElementById("scrollable"), {
-            damping: 0.15,
-            continuousScrolling: true,
-          });
-          scrollbar.addListener((status) => {
-            ScrollTrigger.refresh();
-          });
-        }*/
+        onEnter();
       },
       beforeLeave(data) {
         console.log("Before leave", data);
-        //scrollbar.scrollTo(0, 0, 500);
       },
       leave: (data) => {
         console.log("Leave", data);
@@ -88,7 +90,7 @@ async function main() {
         },
         leave() {},
         enter() {
-          return homeTransition({ scrollbar });
+          return homeTransition();
         },
       },
     ],
