@@ -38,6 +38,14 @@ async function main() {
   function onLeave() {
     let completed = 0;
     const finishedTweens = elapsedTweens.filter((t) => t.progress() > 0);
+    const notStartedTweens = elapsedTweens.filter((t) => t.progress() === 0);
+    notStartedTweens.forEach((t) => {
+      t.pause();
+      elapsedTweens.splice(
+        elapsedTweens.findIndex((tween) => tween.vars.id === t.vars.id),
+        1
+      );
+    });
     return new Promise((r) => {
       if (!finishedTweens.length) r();
 
@@ -60,6 +68,7 @@ async function main() {
     root: ".container",
     debug: true,
     routes,
+    preventRunning: true,
     hooks: {
       once: (data) => console.log("Once", data),
       afterOnce: (data) => {
@@ -68,6 +77,15 @@ async function main() {
       beforeEnter: (data) => console.log("Before enter", data),
       enter: (data) => {
         console.log("Enter", data);
+        if (elapsedTweens.length) {
+          elapsedTweens.forEach((t) => {
+            t.pause();
+            elapsedTweens.splice(
+              elapsedTweens.findIndex((tw) => tw.vars.id === t.vars.id),
+              1
+            );
+          });
+        }
         onEnter();
       },
       beforeLeave(data) {

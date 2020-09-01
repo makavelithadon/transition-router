@@ -94,25 +94,25 @@ export default class Router {
   async leave(transition, state, id) {
     this.handleShouldAnimationContinue(id, state);
     if (this._root.innerHTML.length === 0) return;
+    this._isAnimated = true;
     await this.hooks.beforeLeave(state);
     await this.hooks.leave(state);
-    this._isAnimated = true;
     this.removeClickOnRouterLinks();
     if (transition) {
       transition.leave && (await transition.leave(state));
     }
-    this._isAnimated = false;
     this.handleShouldAnimationContinue(id, state);
     this.removeFromDom();
     await this.hooks.afterLeave(state);
+    this._isAnimated = false;
   }
 
   async enter(route, transition, state, id) {
     this.handleShouldAnimationContinue(id, state);
     this.changeRoute(route);
+    this._isAnimated = true;
     await this.hooks.beforeEnter(state);
     await this.hooks.enter(state);
-    this._isAnimated = true;
     if (transition) {
       transition.enter && (await transition.enter(state));
     }
@@ -127,8 +127,8 @@ export default class Router {
     if (transition) {
       transition.once && (await transition.once(transition, state));
     }
-    this._isAnimated = false;
     await this.hooks.afterOnce(state);
+    this._isAnimated = false;
     this.enter(route, transition, state, id);
   }
 
@@ -202,6 +202,7 @@ export default class Router {
     e.stopPropagation();
     const url = link.getAttribute("href");
     const pathname = document.location.pathname;
+    console.log(this._isAnimated);
     if (pathname === url || (this._preventRunning && this._isAnimated)) return;
     this._history.push(url);
   }
