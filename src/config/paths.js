@@ -10,6 +10,7 @@ const images = path.join(assets, IMG_FOLDER);
 const js = path.join(assets, "js");
 const css = path.join(assets, "css");
 const fonts = path.join(css, "font");
+const build = path.join(ROOT, "build");
 
 module.exports = {
   assets,
@@ -17,4 +18,5 @@ module.exports = {
   js,
   css,
   fonts,
+  build,
 };

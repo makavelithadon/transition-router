@@ -9,7 +9,8 @@
     "script:images": "node scripts/images.js",
     "script:cjs-to-esm": "node scripts/cjs-to-esm.js",
     "script:js-to-css": "node scripts/js-to-css.js",
-    "serve": "npx surge build"
+    "surge": "npx surge build",
+    "serve": "npx serve build"
   },
   "keywords": [],
   "author": "",

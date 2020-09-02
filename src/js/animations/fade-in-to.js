@@ -23,7 +23,7 @@ export default function contextualActionFn(defaults) {
   });
 }
 
-export default function fadeInTo(node = defaultNode, options = {}) {
+export function fadeInTo(node = defaultNode, options = {}) {
   const has = hasClass(node);
 
   const prop = has("top") || has("bottom") ? "y" : "x";

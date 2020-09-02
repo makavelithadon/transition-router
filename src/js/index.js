@@ -4,64 +4,82 @@ import routes from "@js/pages/index.js";
 import Router from "@js/router";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+// import ScrollToPlugin from "gsap/ScrollToPlugin";
 import { home as homeTransition } from "@js/transitions/home";
 import { waitForScroll as waitForScrollToFadeInTop } from "@js/animations/fade-in-top";
 import { waitForScroll as waitForScrollToAppearingLettersTop } from "@js/animations/appearing-letters-top";
 
-import { scrollTo } from "@js/utils";
+import { scrollTo, filterMap } from "@js/utils";
+import initScrollToElements from "@js/scroll-to";
 
 const GSAP_DEFAULTS = {
   ease: "power3.inOut",
   duration: 0.6,
 };
 
+/*
+
+N.B: Côté router => Faire un Promise.all de hooks.leave et transitions[nextIndex].leave
+
+Pour que les deux se fassent en parallèle, sinon, si jamais on a des Promises qui sont résolues tardivement dans chacune
+des deux méthodes, alors on attends beaucoup trop longtemps avant de rentrer dans le enter du next step
+
+Faire de même pour les méthodes enter (hooks.enter et transitions[nextIndex].enter)
+
+*/
+
 gsap.registerPlugin(ScrollTrigger);
+// gsap.registerPlugin(ScrollToPlugin);
 
 gsap.defaults(GSAP_DEFAULTS);
 
-let elapsedTweens = [];
+let registeredTweens = new Map();
 
 async function main() {
   initMenu();
 
   function onEnter() {
-    for (const fadeIn of [...document.querySelectorAll(".fade-in")]) {
-      elapsedTweens.push(waitForScrollToFadeInTop(fadeIn));
+    for (const nodes of [...document.querySelectorAll(".fade-in")]) {
+      const tween = waitForScrollToFadeInTop(nodes);
+      registeredTweens.set(tween.vars.id, tween);
     }
-    for (const appearingIn of [
-      ...document.querySelectorAll(".appearing .inner"),
-    ]) {
-      elapsedTweens.push(waitForScrollToAppearingLettersTop(appearingIn));
+    for (const nodes of [...document.querySelectorAll(".appearing .inner")]) {
+      const tween = waitForScrollToAppearingLettersTop(nodes);
+      registeredTweens.set(tween.vars.id, tween);
     }
+
+    initScrollToElements();
+    /*gsap.to(window, {
+      duration: 2,
+      scrollTo: { y: document.body },
+      ease: "power2.out",
+    });*/
   }
 
   function onLeave() {
-    let completed = 0;
-    const finishedTweens = elapsedTweens.filter((t) => t.progress() > 0);
-    const notStartedTweens = elapsedTweens.filter((t) => t.progress() === 0);
-    notStartedTweens.forEach((t) => {
-      t.pause();
-      elapsedTweens.splice(
-        elapsedTweens.findIndex((tween) => tween.vars.id === t.vars.id),
-        1
-      );
-    });
-    return new Promise((r) => {
-      if (!finishedTweens.length) r();
+    const tweens = registeredTweens;
 
-      for (const tween of finishedTweens) {
-        const tweenId = tween.vars.id;
-        tween.eventCallback("onReverseComplete", () => {
-          completed += 1;
-          elapsedTweens = elapsedTweens.splice(
-            elapsedTweens.findIndex((t) => t.vars.id === tweenId),
-            1
-          );
-          if (completed === finishedTweens.length) r();
-        });
-        tween.reverse();
-      }
-    });
+    const startedTweens = filterMap(tweens, ([, t]) => t.progress() > 0);
+    const unStartedTweens = filterMap(tweens, ([, t]) => t.progress() === 0);
+
+    if (!startedTweens.size) return Promise.resolve();
+
+    unStartedTweens.forEach((tween) =>
+      tweens.delete(tween.pause().kill().vars.id)
+    );
+    return Promise.all(
+      Array.from(startedTweens).map(
+        ([id]) =>
+          new Promise((r) => {
+            const tween = tweens.get(id);
+            tween
+              .eventCallback("onReverseComplete", () =>
+                r(tweens.delete(tween.kill().vars.id))
+              )
+              .reverse();
+          })
+      )
+    );
   }
 
   new Router({
@@ -77,19 +95,11 @@ async function main() {
       beforeEnter: (data) => console.log("Before enter", data),
       enter: (data) => {
         console.log("Enter", data);
-        if (elapsedTweens.length) {
-          elapsedTweens.forEach((t) => {
-            t.pause();
-            elapsedTweens.splice(
-              elapsedTweens.findIndex((tw) => tw.vars.id === t.vars.id),
-              1
-            );
-          });
-        }
         onEnter();
       },
       beforeLeave(data) {
         console.log("Before leave", data);
+        console.log("scrollTo body");
         scrollTo(document.body);
       },
       leave: (data) => {
@@ -139,7 +149,11 @@ async function main() {
         once() {
           return runSplash();
         },
-        leave() {},
+        leave() {
+          // Just ofr example this code never be waited for because on the router,
+          // we have a mecanism to force reject too long transitions after waiting for 2 seconds
+          // return new Promise((r) => window.setTimeout(r, 10000));
+        },
         enter() {
           return homeTransition();
         },

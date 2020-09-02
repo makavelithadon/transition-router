@@ -30,7 +30,8 @@ export default {
     "images": "/root/Projects/barba/src/img",
     "js": "/root/Projects/barba/src/js",
     "css": "/root/Projects/barba/src/css",
-    "fonts": "/root/Projects/barba/src/css/font"
+    "fonts": "/root/Projects/barba/src/css/font",
+    "build": "/root/Projects/barba/build"
   },
   "utils": {},
   "colors": {

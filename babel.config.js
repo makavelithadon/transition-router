@@ -5,7 +5,7 @@ module.exports = {
       {
         useBuiltIns: "usage",
         debug: true,
-        modules: process.env.NODE_ENV === "production" ? false : true,
+        modules: false,
         corejs: {
           version: 3,
           proposals: true,

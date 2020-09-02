@@ -117,3 +117,15 @@ export function createResponsiveImage(url, attrs = {}, alt, realSizes = []) {
       .join("\r\n")}
   />`;
 }
+
+export function splice(arr, index, qty = 1) {
+  return arr.splice(index, qty);
+}
+
+export function filterMap(mapObject, fn) {
+  const map = new Map();
+  for (const entry of mapObject.entries()) {
+    if (fn(entry)) map.set(...entry);
+  }
+  return map;
+}

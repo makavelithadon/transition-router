@@ -1,6 +1,6 @@
 import history from "history/browser";
 import { v4 as uuidv4 } from "uuid";
-import { areEqual, isFn } from "@js/utils";
+import { areEqual, isFn, scrollTo } from "@js/utils";
 
 function getDefaultHooks() {
   return {
@@ -51,7 +51,14 @@ export default class Router {
     return url.slice(url.lastIndexOf("/"));
   }
 
+  preventScrollRestoration() {
+    if (window.history && window.history.scrollRestoration) {
+      window.history.scrollRestoration = "manual";
+    }
+  }
+
   _init() {
+    this.preventScrollRestoration();
     this._history.listen(() => this._onChange());
     this._handleLinks();
     this.setState({ next: this.current });
@@ -80,6 +87,12 @@ export default class Router {
     );
   }
 
+  forceRejectPromise(delay = 2000) {
+    return new Promise((_, reject) => {
+      window.setTimeout(() => reject(), delay);
+    });
+  }
+
   changeRoute({ content, title, scripts }) {
     this.appendToDom(content);
     if (title) document.title = title;
@@ -95,12 +108,19 @@ export default class Router {
     this.handleShouldAnimationContinue(id, state);
     if (this._root.innerHTML.length === 0) return;
     this._isAnimated = true;
-    await this.hooks.beforeLeave(state);
-    await this.hooks.leave(state);
+    this.hooks.beforeLeave(state);
+    const leavingPromises = [this.hooks.leave(state)];
     this.removeClickOnRouterLinks();
     if (transition) {
-      transition.leave && (await transition.leave(state));
+      if (transition.leave) {
+        leavingPromises.push(transition.leave(state));
+      }
     }
+    // run hooks.leave and custom transition's leave method in parallel to avoid to long transition
+    await Promise.race([
+      Promise.all(leavingPromises),
+      this.forceRejectPromise(),
+    ]).catch((err) => err);
     this.handleShouldAnimationContinue(id, state);
     this.removeFromDom();
     await this.hooks.afterLeave(state);
@@ -180,11 +200,17 @@ export default class Router {
         return from.route === current;
       }
     });
-    if (!foundTransition) {
+    if (!foundTransition && firstLoad) {
+      foundTransition = this._transitions.find(({ once }) => isFn(once));
+    }
+    // Hummmm I don't know if i should keep this one, because
+    // actually, it send the only transition, event if it has a from or to which not match the real previous and next ones...
+
+    /*if (!foundTransition) {
       foundTransition = this._transitions.find(({ leave, enter, once }) => {
         return isFn(leave) || isFn(enter) || (firstLoad && isFn(once));
       });
-    }
+    }*/
     return foundTransition;
   }
 
@@ -202,7 +228,6 @@ export default class Router {
     e.stopPropagation();
     const url = link.getAttribute("href");
     const pathname = document.location.pathname;
-    console.log(this._isAnimated);
     if (pathname === url || (this._preventRunning && this._isAnimated)) return;
     this._history.push(url);
   }
